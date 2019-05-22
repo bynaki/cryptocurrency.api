@@ -29,16 +29,12 @@ import {
   IBithumbOrdersDetailInfoParams as IOrdersDetailInfoParams,
   IBithumbOrdersInfoParams as IOrdersInfoParams,
 } from './bithumb.interface'
-import {
-  XCoinAPI,
-} from './modules/xcoinapi'
 import axios from 'axios'
 
 
 
 export class Bithumb {
   public apiUrl = 'https://api.bithumb.com'
-  private _xcoin: XCoinAPI
   private _connectKey: string
   private _secretKey: string
 
@@ -46,7 +42,6 @@ export class Bithumb {
     : {connectKey: string, secretKey: string} = {connectKey: '', secretKey: ''}) {
     this._connectKey = connectKey
     this._secretKey = secretKey
-    this._xcoin = new XCoinAPI(connectKey, secretKey)
   }
 
   // Public API
@@ -336,61 +331,15 @@ export class Bithumb {
       },
     })
     return res.data
-
-    // const res = await fetch(`${this.apiUrl}${endpoint}`, {
-    //   method: 'POST',
-    //   body: JSON.stringify(parameters),
-    //   headers: {
-    //     'Api-Key': this._connectKey,
-    //     'Api-Sign': hmacSignature,
-    //     'Api-Nonce': nonce.toString(),
-    //   },
-    // })
-    // return res.json()
-    // return new Promise((resolve, reject) => {
-    //   const req = {
-    //     method: 'POST',
-    //     uri: `${this.apiUrl}${endPoint}`,
-    //     headers: {
-    //       'Api-Key': this._connectKey,
-    //       'Api-Sign': hmacSignature,
-    //       'Api-Nonce': nonce,
-    //     },
-    //     formData: rgParams,
-    //   }
-    //   console.log('req: ', req)
-    //   const rr = request(req, (err, res, result) => {
-    //     if(err) {
-    //       reject(err)
-    //       return
-    //     }
-    //     const decoded = JSON.parse(result)
-    //     resolve(decoded)
-    //   })
-    //   console.log(rr)
-    // })
   }
 
-  // async _getJson(res: Response) {
-  //   let data = ''
-  //   try {
-  //     data = await res.text()
-  //     return JSON.parse(data)
-  //   } catch(err) {
-  //     const error: Error = err
-  //     if(error.message) {
-  //       error.message += `\ndata: ${data.slice(0, 256)}...`
-  //     }
-  //     throw err
-  //   }
-  // }
-
   private _nonce() {
-    let now = new Date().getTime() / 1000
-    // let now = global['now'] / 1000
-    const sec = parseInt(now.toString(), 10)
-    const usec = (Math.round((now - sec) * 1000) / 1000).toString().substr(2, 3)
-    return Number(String(sec) + String(usec))
+    // let now = new Date().getTime() / 1000
+    // // let now = global['now'] / 1000
+    // const sec = parseInt(now.toString(), 10)
+    // const usec = (Math.round((now - sec) * 1000) / 1000).toString().substr(2, 3)
+    // return Number(String(sec) + String(usec))
+    return new Date().getTime()
   }
 
   private _bindTransType(res: any) {
@@ -417,7 +366,7 @@ function transType(data) {
     data = this
   }
   let cpData = clone(data)
-  // delete cpData.transType
+  cpData && cpData.transType && delete cpData.transType
   if(cpData) {
     for(let key in cpData) {
       if(key !== 'status' && cpData[key] !== null && cpData[key] !== undefined) {

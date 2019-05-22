@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "ava": "^1.4.1",
-    "fs-extra": "^7.0.1",
+    "fs-extra": "^8.0.1",
     "rimraf": "^2.6.3",
     "typescript": "^3.4.5"
   },
@@ -42,9 +42,8 @@
     "axios": "^0.18.0",
     "fourdollar.isfloat": "^1.0.1",
     "fourdollar.isinteger": "^1.0.4",
-    "fourdollar.tostringquery": "^1.1.0",
-    "node-fetch": "^2.5.0",
-    "request": "^2.88.0"
+    "fourdollar.timer": "^1.0.2",
+    "fourdollar.tostringquery": "^1.1.0"
   },
   "ava": {
     "files": [

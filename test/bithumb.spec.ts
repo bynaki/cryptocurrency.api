@@ -9,6 +9,7 @@ import {
 import {
   readFileSync,
 } from 'fs'
+import Timer from 'fourdollar.timer'
 
 
 
@@ -25,11 +26,11 @@ const bithumb = new Bithumb({
   connectKey: cf.bithumb.connectKey,
   secretKey: cf.bithumb.secretKey,
 })
-
+const timer = new Timer(100, 100)
 
 
 test('bithumb > getTicker()', async t => {
-  const res = await bithumb.getTicker('BTC')
+  const res = await timer.once(() => bithumb.getTicker('BTC'))
   t.is(typeof res, 'object')
   t.is(Object.keys(res).length, 3)
   t.is(res.status, '0000')
@@ -49,8 +50,7 @@ test('bithumb > getTicker()', async t => {
 })
 
 test('bithumb > getOrderbook()', async t => {
-  const res = await bithumb.getOrderbook('BTC')
-  console.log(res)
+  const res = await timer.once(() => bithumb.getOrderbook('BTC'))
   // console.log(JSON.stringify(res, null, 2))
   t.is(typeof res, 'object')
   t.is(Object.keys(res).length, 3)
@@ -69,14 +69,14 @@ test('bithumb > getOrderbook()', async t => {
 })
 
 test('bithumb > getOrderbook(): query', async t => {
-  const res = await bithumb.getOrderbook('BTC', {count: 2})
+  const res = await timer.once(() => bithumb.getOrderbook('BTC', {count: 2}))
   // console.log(JSON.stringify(res, null, 2))
   t.is(res.data.asks.length, 2)
   t.is(res.data.bids.length, 2)
 })
 
 test('bithumb > getTransactionHistory()', async t => {
-  const res = await bithumb.getTransactionHistory('BTC')
+  const res = await timer.once(() => bithumb.getTransactionHistory('BTC'))
   // console.log(JSON.stringify(res, null, 2))
   t.is(typeof res, 'object')
   t.is(Object.keys(res).length, 3)
@@ -101,10 +101,10 @@ test('bithumb > getTransactionHistory()', async t => {
 })
 
 test('bithumb > getTransactionHistory(): query', async t => {
-  const res = await bithumb.getTransactionHistory('BTC', {
+  const res = await timer.once(() => bithumb.getTransactionHistory('BTC', {
     cont_no: 3, // 체결 번호 (cont_no가 100 이라면 99 부터 불러진다)
     count: 2,   // 데이터 개수 Value : 1 ~ 100 (Default : 20)
-  })
+  }))
   t.is(res.data.length, 2)
   t.is(res.data[0].cont_no, '2')
   t.is(res.data[1].cont_no, '1')
@@ -116,20 +116,20 @@ test('bithumb > getTransactionHistory(): query', async t => {
 })
 
 test('bithumb > getTransactionHistory(): query = {cont_no: 200 + 100}', async t => {
-  const res = await bithumb.getTransactionHistory('BTC', {
+  const res = await timer.once(() => bithumb.getTransactionHistory('BTC', {
     cont_no: 200 + 100,
     count: 100,
-  })
+  }))
   t.is(res.transType().data[99].cont_no, 200)
 })
 
 test('bithumb > getTransactionHistory(): query = {cont_no: recent}', async t => {
-  const res1 = await bithumb.getTransactionHistory('BTC', { count: 1 })
+  const res1 = await timer.once(() => bithumb.getTransactionHistory('BTC', { count: 1 }))
   const data1 = res1.transType().data
-  const res2 = await bithumb.getTransactionHistory('BTC', {
+  const res2 = await timer.once(() => bithumb.getTransactionHistory('BTC', {
     cont_no: (data1[0].cont_no + 1 + 100),
     count: 100,
-  })
+  }))
   const data2 = res2.transType().data
   console.log(data1[0])
   console.log(data2.slice(0, 5))
@@ -137,7 +137,7 @@ test('bithumb > getTransactionHistory(): query = {cont_no: recent}', async t => 
 })
 
 test('bithumb > getAccountInfo()', async t => {
-  const res = await bithumb.getAccountInfo('BTC')
+  const res = await timer.once(() => bithumb.getAccountInfo('BTC'))
   const trans = res.transType()
   const data = trans.data
   t.is(trans.status, '0000')
@@ -148,7 +148,7 @@ test('bithumb > getAccountInfo()', async t => {
 })
 
 test('bithumb > getBalanceInfo()', async t => {
-  const res = await bithumb.getBalanceInfo('ALL')
+  const res = await timer.once(() => bithumb.getBalanceInfo('ALL'))
   const trans = res.transType()
   const data = trans.data
   t.is(trans.status, '0000')
@@ -167,7 +167,7 @@ test('bithumb > getBalanceInfo()', async t => {
 })
 
 test('bithumb > getWalletAddressInfo()', async t => {
-  const res = await bithumb.getWalletAddressInfo('ETH')
+  const res = await timer.once(() => bithumb.getWalletAddressInfo('ETH'))
   const trans = res.transType()
   const data = trans.data
   t.is(trans.status, '0000')
@@ -176,7 +176,7 @@ test('bithumb > getWalletAddressInfo()', async t => {
 })
 
 test('bithumb > getTickerInfo()', async t => {
-  const res = await bithumb.getTickerInfo('ETH', 'KRW')
+  const res = await timer.once(() => bithumb.getTickerInfo('ETH', 'KRW'))
   const trans = res.transType()
   const data = trans.data
   t.is(trans.status, '0000')
@@ -198,19 +198,19 @@ test('bithumb > getTickerInfo()', async t => {
 })
 
 test('bithumb > getOrdersInfo()', async t => {
-  const res = await bithumb.getOrdersInfo('BTC')
+  const res = await timer.once(() => bithumb.getOrdersInfo('BTC'))
   t.is(res.status, '5600')
 })
 
-test.only('bithumb > getOrdersDetailInfo()', async t => {
-  const res = await bithumb.getOrdersDetailInfo('BTC', {
+test('bithumb > getOrdersDetailInfo()', async t => {
+  const res = await timer.once(() => bithumb.getOrdersDetailInfo('BTC', {
     order_id: 1234,
     type: 'bid',
-  })
+  }))
   t.is(res.status, '5500')
 })
 
 test('bithumb > getTransactionsInfo()', async t => {
-  const res = await bithumb.getTransactionsInfo('BTC')
+  const res = await timer.once(() => bithumb.getTransactionsInfo('BTC'))
   t.is(res.status, '0000')
 })

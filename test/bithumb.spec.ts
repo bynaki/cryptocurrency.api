@@ -214,3 +214,35 @@ test('bithumb > getTransactionsInfo()', async t => {
   const res = await timer.once(() => bithumb.getTransactionsInfo('BTC'))
   t.is(res.status, '0000')
 })
+
+
+test.only('bithumb > ', async t => {
+  const r1 = await timer.once(() => bithumb.getBalanceInfo('ETH'))
+  const eth = r1.transType().data.filter(d => d.currency === 'ETH')[0]
+  const r2 = await timer.once(() => bithumb.place('ETH', 'KRW', {
+    // 100원 단위
+    price: Math.round(eth.xcoin_last / 200) * 100,
+    type: 'bid',
+    units: 0.01,
+  }))
+  const t2 = r2.transType()
+  console.log('place:')
+  console.log(t2)
+  t.is(t2.status, '0000')
+  t.is(typeof t2.order_id, 'number')
+  t.is(t2.data.length, 0)
+  // order_id를 입력하면 currency, order_id, type 모두 필수가 된다.
+  const r3 = await timer.once(() => bithumb.getOrdersInfo('ETH', {
+    order_id: t2.order_id,
+    type: 'bid',
+  }))
+  const t3 = r3.transType()
+  console.log('orders:')
+  console.log(t3)
+  t.is(t3.status, '0000')
+  t.is(t3.data.length, 1)
+  t.is(t3.data[0].order_id, t2.order_id)
+  t.is(t3.data[0].order_currency, 'ETH')
+  t.is(t3.data[0].status, 'placed')
+  // todo: cancel
+})

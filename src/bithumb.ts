@@ -28,6 +28,8 @@ import {
   IBithumbTransactionsInfoParams as ITransactionsInfoParams,
   IBithumbOrdersDetailInfoParams as IOrdersDetailInfoParams,
   IBithumbOrdersInfoParams as IOrdersInfoParams,
+  IBithumbPlaceParams,
+  IBithumbPlaceResponse,
 } from './bithumb.interface'
 import axios from 'axios'
 
@@ -280,10 +282,12 @@ export class Bithumb {
     return this._bindTransType(res)
   }
 
-  async placeOrder(orderCurrency, PaymentCurrency, units, price, type, misu) {
-    return this._privateRequest('/trade/place', {
-      orderCurrency, PaymentCurrency, units, price, type, misu,
-    })
+  async place(orderCurrency: string, paymentCurrency: string, params: IBithumbPlaceParams)
+  : Promise<IBithumbPlaceResponse> {
+    return this._bindTransType(await this._privateRequest('/trade/place', Object.assign({
+      order_currency: orderCurrency,
+      payment_currency: paymentCurrency,
+    }, params)))
   }
 
   async cancelOrder(orderId, type, currency) {

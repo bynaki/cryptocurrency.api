@@ -329,10 +329,10 @@ export interface IBithumbOrdersInfoResponse {
     fee: string
     total: string
     date_completed: number
-  }
+  }[]
   transType: () => {
     status: string
-    data: IBithumbOrdersInfoType
+    data: IBithumbOrdersInfoType[]
   }
 }
 // -------------------------------------------------------------------------
@@ -430,3 +430,35 @@ export interface IBithumbTransactionsInfoResponse {
   }
 }
 // ----------------------------------------------------------------------
+
+
+export interface IBithumbPlaceParams {
+  units: number
+  price: number
+  type : string
+}
+
+export interface IBithumbPlaceType {
+  cont_id    : number
+  units      : number
+  price      : number
+  total      : number
+  fee        : number
+}
+
+export interface IBithumbPlaceResponse {
+  status       : string
+  order_id     : string
+  data: {
+    cont_id    : string
+    units      : string
+    price      : string
+    total      : string
+    fee        : string
+  }[]
+  transType    : () => {
+    status     : string
+    order_id   : number
+    data       : IBithumbPlaceType[]
+  }
+}

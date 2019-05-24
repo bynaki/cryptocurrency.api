@@ -215,8 +215,7 @@ test('bithumb > getTransactionsInfo()', async t => {
   t.is(res.status, '0000')
 })
 
-
-test.only('bithumb > ', async t => {
+test.only('bithumb > place(), cancel(), getOrdersInfo()', async t => {
   const r1 = await timer.once(() => bithumb.getBalanceInfo('ETH'))
   const eth = r1.transType().data.filter(d => d.currency === 'ETH')[0]
   const r2 = await timer.once(() => bithumb.place('ETH', 'KRW', {
@@ -244,5 +243,9 @@ test.only('bithumb > ', async t => {
   t.is(t3.data[0].order_id, t2.order_id)
   t.is(t3.data[0].order_currency, 'ETH')
   t.is(t3.data[0].status, 'placed')
-  // todo: cancel
+  const r4 = await timer.once(() => bithumb.cancel('ETH', {
+    order_id: t2.order_id,
+    type: 'bid'
+  }))
+  t.is(r4.status, '0000')
 })

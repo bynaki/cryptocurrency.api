@@ -432,12 +432,19 @@ export interface IBithumbTransactionsInfoResponse {
 // ----------------------------------------------------------------------
 
 
+
+/**
+ * Place Params
+ */
 export interface IBithumbPlaceParams {
   units: number
   price: number
   type : string
 }
 
+/**
+ * Place Type
+ */
 export interface IBithumbPlaceType {
   cont_id    : number
   units      : number
@@ -446,6 +453,9 @@ export interface IBithumbPlaceType {
   fee        : number
 }
 
+/**
+ * Place Response
+ */
 export interface IBithumbPlaceResponse {
   status       : string
   order_id     : string
@@ -462,3 +472,22 @@ export interface IBithumbPlaceResponse {
     data       : IBithumbPlaceType[]
   }
 }
+// ----------------------------------------------------------------------
+
+
+
+/**
+ * Cancel Params
+ */
+export interface IBithumbCancelParams {
+  order_id: number
+  type    : string
+}
+
+/**
+ * Cancel Response
+ */
+export interface IBithumbCancelResponse {
+  status: string
+}
+// -------------------------------------------------------------------

@@ -30,6 +30,8 @@ import {
   IBithumbOrdersInfoParams as IOrdersInfoParams,
   IBithumbPlaceParams,
   IBithumbPlaceResponse,
+  IBithumbCancelParams,
+  IBithumbCancelResponse,
 } from './bithumb.interface'
 import axios from 'axios'
 
@@ -290,8 +292,9 @@ export class Bithumb {
     }, params)))
   }
 
-  async cancelOrder(orderId, type, currency) {
-    return this._privateRequest('/info/order_detail', {orderId, type, currency})
+  async cancel(currency: string, params: IBithumbCancelParams)
+  : Promise<IBithumbCancelResponse> {
+    return this._privateRequest('/trade/cancel', Object.assign({currency}, params))
   }
 
   async btcWithdrawal(units, address, destination, currency) {

@@ -443,9 +443,9 @@ export interface IBithumbPlaceParams {
 }
 
 /**
- * Place Type
+ * Trade Type
  */
-export interface IBithumbPlaceType {
+export interface IBithumbTradeType {
   cont_id    : number
   units      : number
   price      : number
@@ -454,22 +454,22 @@ export interface IBithumbPlaceType {
 }
 
 /**
- * Place Response
+ * Trade Response
  */
-export interface IBithumbPlaceResponse {
+export interface IBithumbTradeResponse {
   status       : string
   order_id     : string
   data: {
     cont_id    : string
     units      : string
     price      : string
-    total      : string
+    total      : number
     fee        : string
   }[]
   transType    : () => {
     status     : string
     order_id   : number
-    data       : IBithumbPlaceType[]
+    data       : IBithumbTradeType[]
   }
 }
 // ----------------------------------------------------------------------
@@ -491,3 +491,41 @@ export interface IBithumbCancelResponse {
   status: string
 }
 // -------------------------------------------------------------------
+
+
+
+/**
+ * Withdrawal (Coin) Params
+ */
+export interface IBithumbWithdrawalCoinParams {
+  units: number
+  address?: string
+  destination?: number|string
+}
+
+/**
+ * Withdrawal (Coin) Response
+ */
+export interface IBithumbWithdrawalCoinResponse {
+  status: string
+}
+// ---------------------------------------------------------------------
+
+
+
+/**
+ * Withdrawal (KRW) Params
+ */
+export interface IBithumbWithdrawalKrwParams {
+  bank: string
+  account: string
+  price: number
+}
+
+/**
+ * Withdrawal (KRW) Response
+ */
+export interface IBithumbWithdrawalKrwResponse {
+  status: string
+}
+// ---------------------------------------------------------------------

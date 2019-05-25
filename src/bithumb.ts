@@ -29,9 +29,13 @@ import {
   IBithumbOrdersDetailInfoParams as IOrdersDetailInfoParams,
   IBithumbOrdersInfoParams as IOrdersInfoParams,
   IBithumbPlaceParams,
-  IBithumbPlaceResponse,
+  IBithumbTradeResponse,
   IBithumbCancelParams,
   IBithumbCancelResponse,
+  IBithumbWithdrawalCoinParams,
+  IBithumbWithdrawalCoinResponse,
+  IBithumbWithdrawalKrwParams,
+  IBithumbWithdrawalKrwResponse,
 } from './bithumb.interface'
 import axios from 'axios'
 
@@ -284,39 +288,98 @@ export class Bithumb {
     return this._bindTransType(res)
   }
 
+  /**
+   * 지정가 매수/매도 등록 기능을 제공합니다.
+   * https://apidocs.bithumb.com/docs/place
+   * 
+   * POST https://api.bithumb.com/trade/place
+   * 
+   * @param orderCurrency 암호화폐 영문 코드, 기본값 : BTC
+   * @param paymentCurrency 원화 (KRW)
+   * @param units 주문 수량
+   * @param price Currency 거래가 
+   * @param type 거래유형, (bid : 매수 ask : 매도)
+   */
   async place(orderCurrency: string, paymentCurrency: string, params: IBithumbPlaceParams)
-  : Promise<IBithumbPlaceResponse> {
+  : Promise<IBithumbTradeResponse> {
     return this._bindTransType(await this._privateRequest('/trade/place', Object.assign({
       order_currency: orderCurrency,
       payment_currency: paymentCurrency,
     }, params)))
   }
 
+  /**
+   * 등록된 매수/매도 주문 취소 기능을 제공합니다.
+   * https://apidocs.bithumb.com/docs/cancel
+   * 
+   * POST https://api.bithumb.com/trade/cancel
+   * 
+   * @param currency 암호화폐 영문 코드, 기본값 : BTC
+   * @param order_id 매수/매도 주문 등록된 주문번호
+   * @param type 거래유형, (bid : 매수 ask : 매도)	 
+   */
   async cancel(currency: string, params: IBithumbCancelParams)
   : Promise<IBithumbCancelResponse> {
     return this._privateRequest('/trade/cancel', Object.assign({currency}, params))
   }
 
-  async btcWithdrawal(units, address, destination, currency) {
-    return this._privateRequest('/trade/btc_withdrawal', {
-      units, address, destination, currency
-    })
+  /**
+   * 시장가 매수 기능을 제공합니다.
+   * https://apidocs.bithumb.com/docs/marketBuy
+   * 
+   * POST https://api.bithumb.com/trade/market_buy
+   * 
+   * @param currency 암호화폐 영문 코드, 기본값 : BTC
+   * @param units 코인 매수 수량, [최대 주문 금액] 1억 원
+   */
+  async marketBuy(currency: string, units: number)
+  : Promise<IBithumbTradeResponse> {
+    return this._bindTransType(
+      await this._privateRequest('/trade/market_buy', {currency, units}))
   }
 
-  // async krwDeposit() {
-  //   return this._privateRequest('/trade/krw_deposit')
-  // }
-
-  async krwWithdrawal(bank, account, price) {
-    return this._privateRequest('/trade/krw_withdrawal', {bank, account, price})
+  /**
+   * 시장가 매도 기능을 제공합니다.
+   * https://apidocs.bithumb.com/docs/marketSell
+   * 
+   * POST https://api.bithumb.com/trade/market_sell
+   * 
+   * @param currency 암호화폐 영문 코드, 기본값 : BTC
+   * @param units 코인 매도 수량, [최대 주문 금액] 1억 원
+   */
+  async marketSell(currency: string, units: number)
+  : Promise<IBithumbTradeResponse> {
+    return this._bindTransType(
+      await this._privateRequest('/trade/market_sell', {currency, units}))
   }
 
-  async marketBuy(units, currency) {
-    return this._privateRequest('/trade/market_buy', {units, currency})
+  /**
+   * 암호화폐 출금 신청 기능을 제공합니다.
+   * https://apidocs.bithumb.com/docs/withdrawalCoin
+   * 
+   * @param currency 암호화폐 영문 코드, 기본값 : BTC
+   * @param units 출금하고자 하는 코인 수량, [코인 별 1회 최대 수량] 회원 등급 별 출금 가능 수량
+   * @param address 코인 별 출금 주소
+   * @param destination XRP 출금 시 Destination Tag
+   */
+  async withdrawalCoin(currency: string, params: IBithumbWithdrawalCoinParams)
+  : Promise<IBithumbWithdrawalCoinResponse> {
+    return this._privateRequest('/trade/btc_withdrawal', Object.assign({currency}, params))
   }
 
-  async marketSell(units, currency) {
-    return this._privateRequest('/trade/market_sell', {units, currency})
+  /**
+   * 원화(KRW) 출금 신청 기능을 제공합니다.
+   * https://apidocs.bithumb.com/docs/withdrawalKrw
+   * 
+   * POST https://api.bithumb.com/trade/btc_withdrawal
+   * 
+   * @param bank [은행코드_은행명], 011_농협은행
+   * @param account	출금 계좌번호
+   * @param price	출금 KRW 금액	
+   */
+  async withdrawalKrw(params: IBithumbWithdrawalKrwParams)
+  : Promise<IBithumbWithdrawalKrwResponse> {
+    return this._privateRequest('/trade/krw_withdrawal', Object.assign({}, params))
   }
 
   private async _publicRequest(endPoint: string, params?: any) {

@@ -215,7 +215,7 @@ test('bithumb > getTransactionsInfo()', async t => {
   t.is(res.status, '0000')
 })
 
-test.only('bithumb > place(), cancel(), getOrdersInfo()', async t => {
+test('bithumb > place(), cancel(), getOrdersInfo()', async t => {
   const r1 = await timer.once(() => bithumb.getBalanceInfo('ETH'))
   const eth = r1.transType().data.filter(d => d.currency === 'ETH')[0]
   const r2 = await timer.once(() => bithumb.place('ETH', 'KRW', {

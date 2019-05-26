@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "ava": "^1.4.1",
+    "fourdollar.timer": "^1.0.2",
     "fs-extra": "^8.0.1",
     "rimraf": "^2.6.3",
     "typescript": "^3.4.5"
@@ -42,7 +43,6 @@
     "axios": "^0.18.0",
     "fourdollar.isfloat": "^1.0.1",
     "fourdollar.isinteger": "^1.0.4",
-    "fourdollar.timer": "^1.0.2",
     "fourdollar.tostringquery": "^1.1.0"
   },
   "ava": {

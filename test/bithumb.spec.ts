@@ -131,8 +131,8 @@ test('bithumb > getTransactionHistory(): query = {cont_no: recent}', async t => 
     count: 100,
   }))
   const data2 = res2.transType().data
-  console.log(data1[0])
-  console.log(data2.slice(0, 5))
+  // console.log(data1[0])
+  // console.log(data2.slice(0, 5))
   t.pass()
 })
 

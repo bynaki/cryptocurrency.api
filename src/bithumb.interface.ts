@@ -529,3 +529,12 @@ export interface IBithumbWithdrawalKrwResponse {
   status: string
 }
 // ---------------------------------------------------------------------
+
+
+/**
+ * Error Response
+ */
+export interface IBithumbErrorResponse {
+  status: string
+  message: string
+}

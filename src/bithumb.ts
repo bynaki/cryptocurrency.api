@@ -28,19 +28,22 @@ import {
   IBithumbTransactionsInfoParams as ITransactionsInfoParams,
   IBithumbOrdersDetailInfoParams as IOrdersDetailInfoParams,
   IBithumbOrdersInfoParams as IOrdersInfoParams,
-  IBithumbPlaceParams,
-  IBithumbTradeResponse,
-  IBithumbCancelParams,
-  IBithumbCancelResponse,
-  IBithumbWithdrawalCoinParams,
-  IBithumbWithdrawalCoinResponse,
-  IBithumbWithdrawalKrwParams,
-  IBithumbWithdrawalKrwResponse,
+  IBithumbPlaceParams as IPlaceParams,
+  IBithumbTradeResponse as ITradeResponse,
+  IBithumbCancelParams as ICancelParams,
+  IBithumbCancelResponse as ICancelResponse,
+  IBithumbWithdrawalCoinParams as IWithdrawalCoinParams,
+  IBithumbWithdrawalCoinResponse as IWithdrawalCoinResponse,
+  IBithumbWithdrawalKrwParams as IWithdrawalKrwParams,
+  IBithumbWithdrawalKrwResponse as IWithdrawalKrwResponse,
 } from './bithumb.interface'
 import axios from 'axios'
 
 
 
+/**
+ * Bithumb API
+ */
 export class Bithumb {
   public apiUrl = 'https://api.bithumb.com'
   private _connectKey: string
@@ -300,8 +303,8 @@ export class Bithumb {
    * @param price Currency 거래가 
    * @param type 거래유형, (bid : 매수 ask : 매도)
    */
-  async place(orderCurrency: string, paymentCurrency: string, params: IBithumbPlaceParams)
-  : Promise<IBithumbTradeResponse> {
+  async place(orderCurrency: string, paymentCurrency: string, params: IPlaceParams)
+  : Promise<ITradeResponse> {
     return this._bindTransType(await this._privateRequest('/trade/place', Object.assign({
       order_currency: orderCurrency,
       payment_currency: paymentCurrency,
@@ -318,8 +321,8 @@ export class Bithumb {
    * @param order_id 매수/매도 주문 등록된 주문번호
    * @param type 거래유형, (bid : 매수 ask : 매도)	 
    */
-  async cancel(currency: string, params: IBithumbCancelParams)
-  : Promise<IBithumbCancelResponse> {
+  async cancel(currency: string, params: ICancelParams)
+  : Promise<ICancelResponse> {
     return this._privateRequest('/trade/cancel', Object.assign({currency}, params))
   }
 
@@ -333,7 +336,7 @@ export class Bithumb {
    * @param units 코인 매수 수량, [최대 주문 금액] 1억 원
    */
   async marketBuy(currency: string, units: number)
-  : Promise<IBithumbTradeResponse> {
+  : Promise<ITradeResponse> {
     return this._bindTransType(
       await this._privateRequest('/trade/market_buy', {currency, units}))
   }
@@ -348,7 +351,7 @@ export class Bithumb {
    * @param units 코인 매도 수량, [최대 주문 금액] 1억 원
    */
   async marketSell(currency: string, units: number)
-  : Promise<IBithumbTradeResponse> {
+  : Promise<ITradeResponse> {
     return this._bindTransType(
       await this._privateRequest('/trade/market_sell', {currency, units}))
   }
@@ -362,8 +365,8 @@ export class Bithumb {
    * @param address 코인 별 출금 주소
    * @param destination XRP 출금 시 Destination Tag
    */
-  async withdrawalCoin(currency: string, params: IBithumbWithdrawalCoinParams)
-  : Promise<IBithumbWithdrawalCoinResponse> {
+  async withdrawalCoin(currency: string, params: IWithdrawalCoinParams)
+  : Promise<IWithdrawalCoinResponse> {
     return this._privateRequest('/trade/btc_withdrawal', Object.assign({currency}, params))
   }
 
@@ -377,8 +380,8 @@ export class Bithumb {
    * @param account	출금 계좌번호
    * @param price	출금 KRW 금액	
    */
-  async withdrawalKrw(params: IBithumbWithdrawalKrwParams)
-  : Promise<IBithumbWithdrawalKrwResponse> {
+  async withdrawalKrw(params: IWithdrawalKrwParams)
+  : Promise<IWithdrawalKrwResponse> {
     return this._privateRequest('/trade/krw_withdrawal', Object.assign({}, params))
   }
 

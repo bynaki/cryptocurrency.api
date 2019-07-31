@@ -4,27 +4,25 @@
 
 import test from 'ava'
 import {
-  Bithumb,
+  Bithumb, IBithumbErrorResponse,
 } from '../src'
 import {
-  readFileSync,
-} from 'fs'
+  getConfig,
+} from '../src/utils'
 import Timer from 'fourdollar.timer'
 
 
 
-interface Config {
+const {
   bithumb: {
-    connectKey: string
-    secretKey: string
-  }
-}
-
-const cf: Config = JSON.parse(readFileSync('./config.json').toString())
+    connectKey,
+    secretKey,
+  },
+} = getConfig('./config.json')
 
 const bithumb = new Bithumb({
-  connectKey: cf.bithumb.connectKey,
-  secretKey: cf.bithumb.secretKey,
+  connectKey,
+  secretKey,
 })
 const timer = new Timer(100, 100)
 
@@ -198,8 +196,9 @@ test('bithumb > getTickerInfo()', async t => {
 })
 
 test('bithumb > getOrdersInfo()', async t => {
-  const res = await timer.once(() => bithumb.getOrdersInfo('BTC'))
+  const res: IBithumbErrorResponse = (await timer.once(() => bithumb.getOrdersInfo('BTC'))) as any
   t.is(res.status, '5600')
+  t.is(res.message, '거래 진행중인 내역이 존재하지 않습니다.')
 })
 
 test('bithumb > getOrdersDetailInfo()', async t => {
@@ -213,6 +212,7 @@ test('bithumb > getOrdersDetailInfo()', async t => {
 test('bithumb > getTransactionsInfo()', async t => {
   const res = await timer.once(() => bithumb.getTransactionsInfo('BTC'))
   t.is(res.status, '0000')
+  t.is(res.transType().data.length, 0)
 })
 
 test('bithumb > place(), cancel(), getOrdersInfo()', async t => {
@@ -248,4 +248,71 @@ test('bithumb > place(), cancel(), getOrdersInfo()', async t => {
     type: 'bid'
   }))
   t.is(r4.status, '0000')
+})
+
+test('bithumb > 2 place', async t => {
+  const bb = await timer.once(() => bithumb.getBalanceInfo('ETH'))
+  const eth = bb.transType().data.filter(d => d.currency === 'ETH')[0]
+  const pp1 = await timer.once(() => bithumb.place('ETH', 'KRW', {
+    // 100원 단위
+    price: Math.round(eth.xcoin_last / 200) * 100,
+    type: 'bid',
+    units: 0.01,
+  }))
+  const pt1 = pp1.transType()
+  console.log('place:')
+  console.log(pt1)
+  const pp2 = await timer.once(() => bithumb.place('ETH', 'KRW', {
+    // 100원 단위
+    price: Math.round(eth.xcoin_last / 200) * 100,
+    type: 'bid',
+    units: 0.02,
+  }))
+  const pt2 = pp2.transType()
+  console.log('place:')
+  console.log(pt2)
+  const oo1 = await timer.once(() => bithumb.getOrdersInfo('ETH', {
+  }))
+  const ot1 = oo1.transType()
+  console.log('orders:')
+  console.log(ot1)
+  const oo2 = await timer.once(() => bithumb.getOrdersInfo('ETH', {
+    order_id: pt1.order_id
+  }))
+  const ot2 = oo2.transType()
+  // order_id를 입력하면 type도 필수가 된다
+  t.is(ot2.status, '5500')
+  const cc1 = await timer.once(() => bithumb.cancel('ETH', {
+    order_id: pt1.order_id,
+    type: 'bid'
+  }))
+  t.is(cc1.status, '0000')
+  const cc2 = await timer.once(() => bithumb.cancel('ETH', {
+    order_id: pt2.order_id,
+    type: 'bid'
+  }))
+  t.is(cc2.status, '0000')
+  const oo3 = await timer.once(() => bithumb.getOrdersInfo('ETH', {
+  }))
+  const ot3 = oo3.transType()
+  console.log('orders:')
+  console.log(ot3)
+})
+
+test('Bithumb > cancel(): error', async t => {
+  const res: IBithumbErrorResponse = (await timer.once(() => bithumb.cancel('ETH', {
+    order_id: 11111,
+    type: 'ask',
+  }))) as any
+  t.is(res.status, '5600')
+  t.is(res.message, '매수건의 상태가 진행중이 아닙니다. 취소할 수 없습니다.')
+})
+
+test('Bithumb > cancel(): error2', async t => {
+  const res: IBithumbErrorResponse = (await timer.once(() => bithumb.cancel('BTC', {
+    order_id: 11111,
+    type: 'wrong,'
+  }))) as any
+  t.is(res.status, '5500')
+  t.is(res.message, 'Invalid Parameter')
 })

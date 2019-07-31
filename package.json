@@ -1,6 +1,6 @@
 {
   "name": "cryptocurrency.api",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Cryptocurrency API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -43,11 +43,12 @@
     "axios": "^0.18.0",
     "fourdollar.isfloat": "^1.0.1",
     "fourdollar.isinteger": "^1.0.4",
-    "fourdollar.tostringquery": "^1.1.0"
+    "fourdollar.tostringquery": "^1.1.0",
+    "node-binance-api": "^0.9.5"
   },
   "ava": {
     "files": [
-      "dist.test/test/**/*.spec.js"
+      "dist.test/test/binance.spec.js"
     ]
   }
 }

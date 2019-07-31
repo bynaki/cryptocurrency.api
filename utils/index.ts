@@ -8,9 +8,7 @@ import {
 import * as glob from 'glob'
 import {
   join,
-  resolve,
 } from 'path'
-import p from 'fourdollar.promisify'
 
 
 export async function copyAssets(src: string, dest: string, ...exceptions: string[]) {

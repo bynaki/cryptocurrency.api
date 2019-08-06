@@ -1,10 +1,21 @@
 import test from 'ava'
 import * as Binance from 'node-binance-api'
+import {
+  getConfig,
+} from '../src/utils'
 
+
+
+const {
+  binance: {
+    APIKEY,
+    APISECRET,
+  },
+} = getConfig('./config.json')
 
 const binance = Binance().options({
-  APIKEY: 'iAWaVF7xSliMQD6uWhfZfdvsLSFit4Deg4J2v7VDJSd0bHOzDszuinplJUPeZAF0',
-  APISECRET: '1jEEajmk5IEhbLnNB0Tk3XhYDBTmGMY9tbpXweXqpy58LZBAg92cEV0Dk2Uuo4GB',
+  APIKEY,
+  APISECRET,
   useServerTime: true,
 })
 

@@ -1,4 +1,5 @@
 export * from './bithumb.interface'
 export * from './bithumb'
-export * from './binance.interface'
 export * from './binance'
+import * as IBinance from './binance.interface'
+export {IBinance}

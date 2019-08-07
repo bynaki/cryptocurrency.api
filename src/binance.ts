@@ -7,7 +7,6 @@ import isInteger from 'fourdollar.isinteger'
 import isFloat from 'fourdollar.isfloat'
 
 
-
 export class Binance {
   public websockets: BinanceWebsocket
   private _b = null

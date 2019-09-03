@@ -158,10 +158,6 @@ class BinanceWebsocket {
 }
 
 
-/**
- * bithumb에서 받은 데이터의 숫자형 데이터를 number형으로 변환
- * @param data bithumb에서 받은 데이터
- */
 function transType(data) {
   if(!data) {
     data = this

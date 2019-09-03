@@ -13,6 +13,10 @@ export function getConfig(filename: string): {
     APIKEY: string
     APISECRET: string
   }
+  upbit: {
+    accessKey: string
+    secretKey: string
+  }
 } {
   return JSON.parse(readFileSync(filename).toString())
 }

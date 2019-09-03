@@ -1,6 +1,7 @@
 import test from 'ava'
 import {
   Binance,
+  IBinance as I,
 } from '../src'
 import {
   getConfig,
@@ -81,6 +82,23 @@ test('binance > candlesticks()', async t => {
   })
 })
 
+test('binance > candlesticks(): current', async t => {
+  const res = await binance.candlesticks('BTCUSDT', '15m', {
+    limit: 10,
+  })
+  const cut = makeCut(15)
+  const trans = res.transType().data
+  printCandle(...trans)
+  t.is(trans[trans.length - 1].time, cut(new Date().getTime()))
+})
+
+test('binance > candlesticks(): future', async t => {
+  const res = await binance.candlesticks('BTCUSDT', '1m', {
+    startTime: new Date('2022.08.09 20:00').getTime(),
+  })
+  t.is(res.data.length, 0)
+})
+
 test.cb('binance > websockets#candlesticks()', t => {
   binance.websockets.candlesticks(['BTCUSDT'], '1m', (candlesticks) => {
     // binance.websockets.terminate('btcusdt@kline_1m')
@@ -107,3 +125,32 @@ test('binance > websockets#candlesticks(): terminate', async t => {
   await stop(10000)
   t.pass()
 })
+
+test('binance > print symbol', async t => {
+  const res = await binance.prices()
+  const ptn = /^[A-Z]+USDT$/
+  res.transType().data.filter(r => ptn.test(r.symbol))
+  .forEach(r => {
+    console.log(`${r.symbol} = '${r.symbol}',`)
+  })
+  t.pass()
+})
+
+
+
+function printCandle(...data: I.CandleStickType[]) {
+  data.forEach(d => {
+    console.log({
+      mts: new Date(d.time).toLocaleString(),
+      open: d.open,
+      close: d.close,
+      hight: d.high,
+      low: d.low,
+      volumn: d.volume,
+    })
+  })
+}
+
+export function makeCut(timeFrame: number): (time: number) => number {
+  return (time: number) => time - (time % (timeFrame * 60 * 1000))
+}

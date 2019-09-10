@@ -34,45 +34,23 @@ export class UPbit {
     return this._quotation('/market/all')
   }
 
-  getCandlesMinutes(min: number, params: {
-    market: string
-    to?: string
-    count?: number
-  }): Promise<I.Response<I.CandleMinuteType[]>> {
+  getCandlesMinutes(min: number, params: I.CandleParam): Promise<I.Response<I.CandleMinuteType[]>> {
     return this._quotation(`/candles/minutes/${min}`, params)
   }
 
-  getCandlesDays(params: {
-    market: string
-    to?: string
-    count?: number
-    convertingPriceUnit?: string
-  }): Promise<I.Response<I.CandleDayType[]>> {
+  getCandlesDays(params: I.CandleParamEx): Promise<I.Response<I.CandleDayType[]>> {
     return this._quotation('/candles/days', params)
   }
 
-  getCandlesWeeks(params: {
-    market: string
-    to?: string
-    count?: number
-  }): Promise<I.Response<I.CandleWeekType[]>> {
+  getCandlesWeeks(params: I.CandleParam): Promise<I.Response<I.CandleWeekType[]>> {
     return this._quotation('/candles/weeks', params)
   }
 
-  getCandlesMonths(params: {
-    market: string
-    to?: string
-    count?: number
-  }): Promise<I.Response<I.CandleMonthType[]>> {
+  getCandlesMonths(params: I.CandleParam): Promise<I.Response<I.CandleMonthType[]>> {
     return this._quotation('/candles/months', params)
   }
 
-  getTradesTicks(params: {
-    market: string
-    to?: string
-    count?: number
-    cursor?: string
-  }): Promise<I.Response<I.TradeTickType[]>> {
+  getTradesTicks(params: I.TradeTickParam): Promise<I.Response<I.TradeTickType[]>> {
     return this._quotation('/trades/ticks', params)
   }
 
@@ -98,38 +76,19 @@ export class UPbit {
     return this._exchange('/orders/chance', 'GET', {params})
   }
 
-  getOrder(params: {
-    uuid: string
-    identifier?: string
-  }): Promise<I.Response<I.OrderDetailType>> {
+  getOrderDetail(params: I.OrderDetailParam): Promise<I.Response<I.OrderDetailType>> {
     return this._exchange('/order', 'GET', {params})
   }
 
-  getOrderList(params: {
-    market: string
-    state?: string
-    uuids?: string[]
-    identifiers?: string[]
-    page?: number
-    order_by?: 'desc'|'asc'
-  }): Promise<I.Response<I.OrderType[]>> {
+  getOrderList(params: I.OrderListParam): Promise<I.Response<I.OrderType[]>> {
     return this._exchange('/orders', 'GET', {params})
   }
 
-  cancel(params: {
-    uuid: string
-  }): Promise<I.Response<I.OrderType>> {
+  cancel(params: I.CancelParam): Promise<I.Response<I.OrderType>> {
     return this._exchange('/order', 'DELETE', {params})
   }
 
-  order(params: {
-    market: string
-    side: 'bid'|'ask'
-    volume?: number
-    price: number
-    ord_type: 'limit'|'price'|'market'
-    identifier?: string
-  }): Promise<I.Response<I.OrderExType>> {
+  order(params: I.OrderParam): Promise<I.Response<I.OrderExType>> {
     return this._exchange('/orders', 'POST', {data: params})
   }
 

@@ -186,3 +186,47 @@ export interface OrderDetailType extends OrderType {
 export interface OrderExType extends OrderType {
   avg_price: string
 }
+
+export interface CandleParam {
+  market: string
+  to?: string
+  count?: number
+}
+
+export interface CandleParamEx extends CandleParam {
+  convertingPriceUnit?: string
+}
+
+export interface TradeTickParam {
+  market: string
+  to?: string
+  count?: number
+  cursor?: string
+}
+
+export interface OrderDetailParam {
+  uuid: string
+  identifier?: string
+}
+
+export interface OrderListParam {
+  market: string
+  state?: string
+  uuids?: string[]
+  identifiers?: string[]
+  page?: number
+  order_by?: 'desc'|'asc'
+}
+
+export interface OrderParam {
+  market: string
+  side: 'bid'|'ask'
+  volume?: number
+  price: number
+  ord_type: 'limit'|'price'|'market'
+  identifier?: string
+}
+
+export interface CancelParam {
+  uuid: string
+}

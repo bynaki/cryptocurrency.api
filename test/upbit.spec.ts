@@ -395,8 +395,8 @@ test('upbit > getOrdersChance', async t => {
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 
-// test('upbit > getOrder', async t => {
-//   const res = await upbit.getOrder({uuid: 'baduuid'})
+// test('upbit > getOrderDetail', async t => {
+//   const res = await upbit.getOrderDetail({uuid: 'baduuid'})
 //   console.log(res)
 //   t.is(res.status, 200)
 //   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])

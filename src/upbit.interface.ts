@@ -103,3 +103,86 @@ export interface OrderbookType {
     bid_size: number
   }]
 }
+
+export interface AccountType {
+  currency: string
+  balance: string
+  locked: string
+  avg_buy_price: string
+  avg_buy_price_modified: boolean
+  unit_currency: string
+}
+
+export interface OrderChanceType {
+  bid_fee: string
+  ask_fee: string
+  market: {
+    id: string
+    name: string
+    order_types: string[]
+    order_sides: string[]
+    bid: {
+      currency: string
+      price_unit: string
+      min_total: number
+    },
+    ask: {
+      currency: string
+      price_unit: string
+      min_total: number
+    },
+    max_total: string
+    state: string
+  },
+  bid_account: {
+    currency: string
+    balance: string
+    locked: string
+    avg_buy_price: string
+    avg_buy_price_modified: boolean
+    unit_currency: string
+  },
+  ask_account: {
+    currency: string
+    balance: string
+    locked: string
+    avg_buy_price: string
+    avg_buy_price_modified: boolean
+    unit_currency: string
+  }
+}
+
+export interface OrderType {
+  uuid: string
+  side: 'bid'|'ask'
+  ord_type: 'limit'|'price'|'market'
+  price: string
+  state: 'wait'|'done'
+  market: string
+  created_at: string
+  volume: string
+  remaining_volume: string
+  reserved_fee: string
+  remaining_fee: string
+  paid_fee: string
+  locked: string
+  executed_volume: string
+  trades_count: number
+}
+
+export interface OrderDetailType extends OrderType {
+  trades: [
+    {
+      market: string
+      uuid: string
+      price: string
+      volume: string
+      funds: string
+      side: 'bid'|'ask'
+    }
+  ]
+}
+
+export interface OrderExType extends OrderType {
+  avg_price: string
+}

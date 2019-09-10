@@ -14,8 +14,8 @@ import { deflate } from 'zlib';
 const cf = getConfig('./config.json')
 const upbit = new UPbit(cf.upbit)
 
-test('upbit > market', async t => {
-  const res = await upbit.market()
+test('upbit > getMarket', async t => {
+  const res = await upbit.getMarket()
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -26,8 +26,8 @@ test('upbit > market', async t => {
   })
 })
 
-test('upbit > candlesMinutes', async t => {
-  const res = await upbit.candlesMinutes(1, {market: 'KRW-BTC'})
+test('upbit > getCandlesMinutes', async t => {
+  const res = await upbit.getCandlesMinutes(1, {market: 'KRW-BTC'})
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 1)
@@ -47,15 +47,15 @@ test('upbit > candlesMinutes', async t => {
   console.log(res)
 })
 
-test('upbit > candlesMinutes: error', async t => {
+test('upbit > getCandlesMinutes: error', async t => {
   const err: AxiosError = await t.throwsAsync(() => {
-    return upbit.candlesMinutes(2, {market: 'KRW-BTC'})
+    return upbit.getCandlesMinutes(2, {market: 'KRW-BTC'})
   })
   t.is(err.message, 'Request failed with status code 400')
 })
 
-test('upbit > candlesMinutes: params', async t => {
-  const res = await upbit.candlesMinutes(5, {
+test('upbit > getCandlesMinutes: params', async t => {
+  const res = await upbit.getCandlesMinutes(5, {
     market: 'KRW-BTC',
     to: '2019-01-01 12:00:00',
     count: 10,
@@ -91,8 +91,8 @@ test('upbit > candlesMinutes: params', async t => {
   })
 })
 
-test('upbit > candlesDays', async t => {
-  const res = await upbit.candlesDays({market: 'KRW-BTC'})
+test('upbit > getCandlesDays', async t => {
+  const res = await upbit.getCandlesDays({market: 'KRW-BTC'})
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 1)
@@ -114,8 +114,8 @@ test('upbit > candlesDays', async t => {
   console.log(res)
 })
 
-test('upbit > candlesDays: params', async t => {
-  const res = await upbit.candlesDays({
+test('upbit > getCandlesDays: params', async t => {
+  const res = await upbit.getCandlesDays({
     market: 'KRW-BTC',
     to: '2019-02-20 12:00:00',
     count: 10,
@@ -158,8 +158,8 @@ test('upbit > candlesDays: params', async t => {
   })
 })
 
-test('upbit > candlesWeeks', async t => {
-  const res = await upbit.candlesWeeks({market: 'KRW-BTC'})
+test('upbit > getCandlesWeeks', async t => {
+  const res = await upbit.getCandlesWeeks({market: 'KRW-BTC'})
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -179,8 +179,8 @@ test('upbit > candlesWeeks', async t => {
   ])
 })
 
-test('upbit > candlesWeeks: params', async t => {
-  const res = await upbit.candlesWeeks({
+test('upbit > getCandlesWeeks: params', async t => {
+  const res = await upbit.getCandlesWeeks({
     market: 'KRW-BTC',
     to: '2019-02-20 12:00:00',
     count: 10,
@@ -217,8 +217,8 @@ test('upbit > candlesWeeks: params', async t => {
   })
 })
 
-test('upbit > candlesMonths', async t => {
-  const res = await upbit.candlesMonths({market: 'KRW-BTC'})
+test('upbit > getCandlesMonths', async t => {
+  const res = await upbit.getCandlesMonths({market: 'KRW-BTC'})
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -238,8 +238,8 @@ test('upbit > candlesMonths', async t => {
   ])
 })
 
-test('upbit > candlesMonths: params', async t => {
-  const res = await upbit.candlesMonths({
+test('upbit > getCandlesMonths: params', async t => {
+  const res = await upbit.getCandlesMonths({
     market: 'KRW-BTC',
     to: '2019-02-01 00:00:00',
     count: 10,
@@ -276,8 +276,8 @@ test('upbit > candlesMonths: params', async t => {
   })
 })
 
-test('upbit > tradesTicks', async t => {
-  const res = await upbit.tradesTicks({market: 'KRW-BTC'})
+test('upbit > getTradesTicks', async t => {
+  const res = await upbit.getTradesTicks({market: 'KRW-BTC'})
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -296,8 +296,8 @@ test('upbit > tradesTicks', async t => {
   ])
 })
 
-test('upbit > tradesTicks: params', async t => {
-  const res = await upbit.tradesTicks({
+test('upbit > getTradesTicks: params', async t => {
+  const res = await upbit.getTradesTicks({
     market: 'KRW-BTC',
     to: '00:05:00',
     count: 10,
@@ -308,8 +308,8 @@ test('upbit > tradesTicks: params', async t => {
   t.is(res.data.length, 10)
 })
 
-test('upbit > ticker', async t => {
-  const res = await upbit.ticker({ markets: 'KRW-BTC' })
+test('upbit > getTicker', async t => {
+  const res = await upbit.getTicker({ markets: 'KRW-BTC' })
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -344,16 +344,16 @@ test('upbit > ticker', async t => {
   ])
 })
 
-test('upbit > ticker: 2 length', async t => {
-  const res = await upbit.ticker({ markets: 'KRW-BTC, KRW-ETH' })
+test('upbit > getTicker: 2 length', async t => {
+  const res = await upbit.getTicker({ markets: 'KRW-BTC, KRW-ETH' })
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 2)
 })
 
-test('upbit > orderbook', async t => {
-  const res = await upbit.orderbook({ markets: 'KRW-BTC' })
+test('upbit > getOrderbook', async t => {
+  const res = await upbit.getOrderbook({ markets: 'KRW-BTC' })
   console.log(res)
   console.log(res.data[0].orderbook_units)
   t.is(res.status, 200)
@@ -374,11 +374,60 @@ test('upbit > orderbook', async t => {
   ])
 })
 
-test('upbit > orderbook: 2 length', async t => {
-  const res = await upbit.orderbook({ markets: 'KRW-BTC, KRW-ADA' })
+test('upbit > getOrderbook: 2 length', async t => {
+  const res = await upbit.getOrderbook({ markets: 'KRW-BTC, KRW-ADA' })
   console.log(res)
   console.log(res.data[0].orderbook_units)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 2)
 })
+
+test('upbit > getAccounts', async t => {
+  const res = await upbit.getAccounts()
+  console.log(res)
+  t.is(res.status, 200)
+  t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+})
+
+test('upbit > getOrdersChance', async t => {
+  const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
+  console.log(res)
+  t.is(res.status, 200)
+  t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+})
+
+// test('upbit > getOrder', async t => {
+//   const res = await upbit.getOrder({uuid: 'baduuid'})
+//   console.log(res)
+//   t.is(res.status, 200)
+//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+// })
+
+// test('upbit > getOrderList', async t => {
+//   const res = await upbit.getOrderList({market: 'KRW-BTC'})
+//   console.log(res)
+//   t.is(res.status, 200)
+//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+// })
+
+// test('upbit > cancel', async t => {
+//   const res = await upbit.cancel({uuid: 'baduuid'})
+//   console.log(res)
+//   t.is(res.status, 200)
+//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+// })
+
+// test.only('upbit > order', async t => {
+//   const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
+//   const price = trade.data[0].trade_price / 2
+//   const res = await upbit.order({
+//     market: 'KRW-BTC',
+//     side: 'bid',
+//     volume: 1,
+//     price,
+//     ord_type: 'limit',
+//   })
+//   t.is(res.status, 200)
+//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+// })

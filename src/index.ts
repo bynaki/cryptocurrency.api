@@ -6,3 +6,4 @@ export {IBinance}
 export * from './upbit'
 import * as IUpbit from './upbit.interface'
 export {IUpbit}
+export {AxiosError} from 'axios'

@@ -4,10 +4,8 @@ import {
 } from '../src/utils'
 import {
   UPbit,
-  IUpbit,
 } from '../src'
 import { AxiosError } from 'axios';
-import { deflate } from 'zlib';
 
 
 

@@ -43,7 +43,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "fourdollar.isfloat": "^1.0.1",
     "fourdollar.isinteger": "^1.0.4",
     "fourdollar.tostringquery": "^1.1.0",

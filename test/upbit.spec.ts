@@ -20,7 +20,14 @@ test('upbit > getMarket', async t => {
   t.deepEqual(res.data.filter(d => d.market === 'KRW-BTC')[0], {
     market: 'KRW-BTC',
     korean_name: '비트코인',
-    english_name: 'Bitcoin'
+    english_name: 'Bitcoin',
+  })
+  const res2 = await upbit.getMarket(true)
+  t.deepEqual(res2.data.filter(d => d.market === 'KRW-BTC')[0], {
+    market: 'KRW-BTC',
+    korean_name: '비트코인',
+    english_name: 'Bitcoin',
+    market_warning: 'NONE',
   })
 })
 
@@ -306,7 +313,7 @@ test('upbit > getTradesTicks: params', async t => {
   t.is(res.data.length, 10)
 })
 
-test('upbit > getTicker', async t => {
+test.only('upbit > getTicker', async t => {
   const res = await upbit.getTicker({ markets: 'KRW-BTC' })
   console.log(res)
   t.is(res.status, 200)

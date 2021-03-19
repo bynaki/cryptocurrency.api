@@ -12,7 +12,7 @@ interface MarketType {
   english_name: string
 }
 
-test('마켓 코드 조회', async t => {
+test.only('마켓 코드 조회', async t => {
   const config = {
     method: 'GET',
     url: 'https://api.upbit.com/v1/market/all',
@@ -21,8 +21,8 @@ test('마켓 코드 조회', async t => {
     const res = await axios(config)
     const data: MarketType[] = res.data
     const pt = /^KRW-/
-    // console.log(data.filter(i => pt.test(i.market)))
-    console.log(res.headers)
+    console.log(data.filter(i => pt.test(i.market)))
+    //console.log(res.headers)
   } catch(e) {
     const err: AxiosError = e
     console.log(err.message)
@@ -45,7 +45,7 @@ interface MinuteCandleType {
   unit: number
 }
 
-test.only('분(Minute) 캔들', async t => {
+test('분(Minute) 캔들', async t => {
   try {
     const res = await axios({
       method: 'GET',

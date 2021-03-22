@@ -157,72 +157,108 @@ export interface TickerType {
 }
 
 export interface OrderbookType {
+  // 마켓 코드	String
   market: string
+  // 호가 생성 시각	Long
   timestamp: number
+  // 호가 매도 총 잔량	Double
   total_ask_size: number
+  // 호가 매수 총 잔량	Double
   total_bid_size: number
+  // 호가	List of Objects
   orderbook_units: [{
+    // 매도호가	Double
     ask_price: number
+    // 매수호가	Double
     bid_price: number
+    // 매도 잔량	Double
     ask_size: number
+    // 매수 잔량	Double
     bid_size: number
   }]
 }
 
-/**
- * 전체 계좌 조회
- * https://docs.upbit.com/reference#%EC%9E%90%EC%82%B0-%EC%A1%B0%ED%9A%8C
-**/
 export interface AccountType {
-  // 화폐를 의미하는 영문 대문자 코드
+  // 화폐를 의미하는 영문 대문자 코드 String
   currency: string
-  // 주문가능 금액/수량
+  // 주문가능 금액/수량 NumberString
   balance: string
-  // 주문 중 묶여있는 금액/수량
+  // 주문 중 묶여있는 금액/수량 NumberString
   locked: string
-  // 매수평균가
+  // 매수평균가 NumberString
   avg_buy_price: string
-  // 매수평균가 수정 여부
+  // 매수평균가 수정 여부 Boolen
   avg_buy_price_modified: boolean
-  // 평단가 기준 화폐
+  // 평단가 기준 화폐 String
   unit_currency: string
 }
 
 export interface OrderChanceType {
+  // 매수 수수료 비율	NumberString
   bid_fee: string
+  // 매도 수수료 비율	NumberString
   ask_fee: string
+  // 마켓에 대한 정보	Object
   market: {
+    // 마켓의 유일 키	String
     id: string
+    // 마켓 이름	String
     name: string
+    // 지원 주문 방식	Array[String]
     order_types: string[]
+    // 지원 주문 종류	Array[String]
     order_sides: string[]
+    // 매수 시 제약사항	Object
     bid: {
+      // 화폐를 의미하는 영문 대문자 코드	String
       currency: string
+      // 주문금액 단위	String
       price_unit: string
+      // 최소 매도/매수 금액	Number
       min_total: number
     },
+    // 매도 시 제약사항	Object
     ask: {
+      // 화폐를 의미하는 영문 대문자 코드	String
       currency: string
+      // 주문금액 단위	String
       price_unit: string
+      // 최소 매도/매수 금액	Number
       min_total: number
     },
+    // 최대 매도/매수 금액	NumberString
     max_total: string
+    // 마켓 운영 상태	String
     state: string
   },
+  // 매수 시 사용하는 화폐의 계좌 상태	Object
   bid_account: {
+    // 화폐를 의미하는 영문 대문자 코드	String
     currency: string
+    // 주문가능 금액/수량	NumberString
     balance: string
+    // 주문 중 묶여있는 금액/수량	NumberString
     locked: string
+    // 매수평균가	NumberString
     avg_buy_price: string
+    // 매수평균가 수정 여부	Boolean
     avg_buy_price_modified: boolean
+    // 평단가 기준 화폐	String
     unit_currency: string
   },
+  // 매도 시 사용하는 화폐의 계좌 상태	Object
   ask_account: {
+    // 화폐를 의미하는 영문 대문자 코드	String
     currency: string
+    // 주문가능 금액/수량	NumberString
     balance: string
+    // 주문 중 묶여있는 금액/수량	NumberString
     locked: string
+    // 매수평균가	NumberString
     avg_buy_price: string
+    // 매수평균가 수정 여부	Boolean
     avg_buy_price_modified: boolean
+    // 평단가 기준 화폐	String
     unit_currency: string
   }
 }

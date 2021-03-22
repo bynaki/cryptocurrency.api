@@ -313,7 +313,7 @@ test('upbit > getTradesTicks: params', async t => {
   t.is(res.data.length, 10)
 })
 
-test.only('upbit > getTicker', async t => {
+test('upbit > getTicker', async t => {
   const res = await upbit.getTicker({ markets: 'KRW-BTC' })
   console.log(res)
   t.is(res.status, 200)
@@ -364,6 +364,7 @@ test('upbit > getOrderbook', async t => {
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 1)
+  t.is(res.data[0].orderbook_units.length, 15)
   t.deepEqual(Object.keys(res.data[0]), [
     'market',
     'timestamp',
@@ -383,6 +384,7 @@ test('upbit > getOrderbook: 2 length', async t => {
   const res = await upbit.getOrderbook({ markets: 'KRW-BTC, KRW-ADA' })
   console.log(res)
   console.log(res.data[0].orderbook_units)
+  console.log(res.data[1].orderbook_units)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 2)
@@ -395,9 +397,9 @@ test('upbit > getAccounts', async t => {
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 
-test('upbit > getOrdersChance', async t => {
+test.only('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
-  console.log(res)
+  console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })

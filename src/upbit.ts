@@ -105,7 +105,7 @@ export class UPbit {
    * 현재가 정보
    * 요청 당시 종목의 스냅샷을 반환한다.
    * https://docs.upbit.com/reference#ticker%ED%98%84%EC%9E%AC%EA%B0%80-%EB%82%B4%EC%97%AD
-   * market*: string 마켓 코드 (ex. KRW-BTC, BTC-BCC)
+   * markets*: string 반점으로 구분되는 마켓 코드 (ex. KRW-BTC, BTC-BCC)
   **/
   getTicker(params: {
     markets: string
@@ -113,6 +113,11 @@ export class UPbit {
     return this._quotation('/ticker', params)
   }
 
+  /**
+   * 호가 정보 조회
+   * https://docs.upbit.com/reference#%ED%98%B8%EA%B0%80-%EC%A0%95%EB%B3%B4-%EC%A1%B0%ED%9A%8C
+   * markets*: array of strings 마켓 코드 목록 (ex. KRW-BTC,KRW-ADA)
+  **/
   getOrderbook(params: {
     markets: string
   }): Promise<I.Response<I.OrderbookType[]>> {
@@ -128,6 +133,11 @@ export class UPbit {
     return this._exchange('/accounts', 'GET')
   }
 
+  /**
+   * 주문 가능 정보
+   * https://docs.upbit.com/reference#%EC%A3%BC%EB%AC%B8-%EA%B0%80%EB%8A%A5-%EC%A0%95%EB%B3%B4
+   * market *:	마켓ID	String
+  **/
   getOrdersChance(params: {
     market: string
   }): Promise<I.Response<I.OrderChanceType>> {

@@ -6,6 +6,7 @@ import {
   UPbit,
 } from '../src'
 import { AxiosError } from 'axios';
+import {OrderType} from '../src/upbit.interface';
 
 
 
@@ -397,22 +398,59 @@ test('upbit > getAccounts', async t => {
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 
-test.only('upbit > getOrdersChance', async t => {
+test('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
   console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 
+test.only('upbit > getOrderList: default', async t => {
+  const res = await upbit.getOrderList()
+  console.log(res)
+  t.is(res.status, 200)
+  t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+  if(res.data.length !== 0) {
+    console.log(Object.keys(res.data[0]))
+    t.deepEqual(Object.keys(res.data[0]), [
+      'uuid',             'side',
+      'ord_type',         'price',
+      'state',            'market',
+      'created_at',       'volume',
+      'remaining_volume', 'reserved_fee',
+      'remaining_fee',    'paid_fee',
+      'locked',           'executed_volume',
+      'trades_count',
+    ])
+    // default
+    res.data.forEach(d => t.is(d.state, 'wait'))
+  }
+})
+
+test('upbit > getOrderList', async t => {
+  //const res = await upbit.getOrderList({market: 'KRW-BTC'})
+  const res = await upbit.getOrderList()
+  console.log(res)
+  t.is(res.status, 200)
+  t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+  const data = res.data[0]
+  console.log(Object.keys(data))
+  t.deepEqual(Object.keys(data), [
+    'uuid',             'side',
+    'ord_type',         'price',
+    'state',            'market',
+    'created_at',       'volume',
+    'remaining_volume', 'reserved_fee',
+    'remaining_fee',    'paid_fee',
+    'locked',           'executed_volume',
+    'trades_count',
+  ])
+  // default
+  t.is(data.state, 'wait')
+})
+
 // test('upbit > getOrderDetail', async t => {
 //   const res = await upbit.getOrderDetail({uuid: 'baduuid'})
-//   console.log(res)
-//   t.is(res.status, 200)
-//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
-// })
-
-// test('upbit > getOrderList', async t => {
-//   const res = await upbit.getOrderList({market: 'KRW-BTC'})
 //   console.log(res)
 //   t.is(res.status, 200)
 //   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])

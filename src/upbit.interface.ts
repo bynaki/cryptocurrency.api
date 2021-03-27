@@ -264,20 +264,35 @@ export interface OrderChanceType {
 }
 
 export interface OrderType {
+  // 주문의 고유 아이디 String
   uuid: string
+  // 주문 종류String
   side: 'bid'|'ask'
+  // 주문 방식 String
   ord_type: 'limit'|'price'|'market'
+  // 주문 당시 화폐 가격 NumberString
   price: string
-  state: 'wait'|'done'
+  // 주문 상태 String
+  state: 'wait'|'watch'|'done'|'cancel'
+  // 마켓의 유일키 String
   market: string
+  // 주문 생성 시간 DateString
   created_at: string
+  // 사용자가 입력한 주문 양 NumberString
   volume: string
+  // 체결 후 남은 주문 양 NumberString
   remaining_volume: string
+  // 수수료로 예약된 비용 NumberString
   reserved_fee: string
+  // 남은 수수료 NumberString
   remaining_fee: string
+  // 사용된 수수료 NumberString
   paid_fee: string
+  // 거래에 사용중인 비용 NumberString
   locked: string
+  // 체결된 양 NumberString
   executed_volume: string
+  // 해당 주문에 걸린 체결 수 Integer
   trades_count: number
 }
 
@@ -343,11 +358,26 @@ export interface OrderDetailParam {
 }
 
 export interface OrderListParam {
-  market: string
-  state?: string
+  // 마켓 아이디 String
+  market?: string
+  // 주문 UUID의 목록 Array
   uuids?: string[]
+  // 주문 identifier의 목록 Array
   identifiers?: string[]
+  // 주문 상태 String
+  // - wait : 체결 대기 (default)
+  // - watch : 예약주문 대기
+  // - done : 전체 체결 완료
+  // - cancel : 주문 취소
+  state?: 'wait'|'watch'|'done'|'cancel'
+  // 주문 상태의 목록 Array
+  // * 미체결 주문(wait, watch)과 완료 주문(done, cancel)은 혼합하여 조회하실 수 없습니다.
+  states?: ['wait'|'watch'|'done'|'cancel']
+  // 페이지 수, default: 1 Number
   page?: number
+  // 정렬 방식
+  // - asc : 오름차순
+  // - desc : 내림차순 (default) String
   order_by?: 'desc'|'asc'
 }
 

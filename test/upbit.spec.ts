@@ -6,13 +6,13 @@ import {
   UPbit,
 } from '../src'
 import { AxiosError } from 'axios';
-import {OrderType} from '../src/upbit.interface';
 
 
 
 const cf = getConfig('./config.json')
 const upbit = new UPbit(cf.upbit)
 
+// 마켓 코드 조회
 test('upbit > getMarket', async t => {
   const res = await upbit.getMarket()
   console.log(res)
@@ -32,6 +32,7 @@ test('upbit > getMarket', async t => {
   })
 })
 
+// 분(Minute) 캔들
 test('upbit > getCandlesMinutes', async t => {
   const res = await upbit.getCandlesMinutes(1, {market: 'KRW-BTC'})
   t.is(res.status, 200)
@@ -53,6 +54,7 @@ test('upbit > getCandlesMinutes', async t => {
   console.log(res)
 })
 
+// 분(Minute) 캔들
 test('upbit > getCandlesMinutes: error', async t => {
   const err: AxiosError = await t.throwsAsync(() => {
     return upbit.getCandlesMinutes(2, {market: 'KRW-BTC'})
@@ -97,6 +99,7 @@ test('upbit > getCandlesMinutes: params', async t => {
   })
 })
 
+// 일(Day) 캔들
 test('upbit > getCandlesDays', async t => {
   const res = await upbit.getCandlesDays({market: 'KRW-BTC'})
   t.is(res.status, 200)
@@ -120,6 +123,7 @@ test('upbit > getCandlesDays', async t => {
   console.log(res)
 })
 
+// 일(Day) 캔들
 test('upbit > getCandlesDays: params', async t => {
   const res = await upbit.getCandlesDays({
     market: 'KRW-BTC',
@@ -164,6 +168,7 @@ test('upbit > getCandlesDays: params', async t => {
   })
 })
 
+// 주(Week) 캔들
 test('upbit > getCandlesWeeks', async t => {
   const res = await upbit.getCandlesWeeks({market: 'KRW-BTC'})
   console.log(res)
@@ -185,6 +190,7 @@ test('upbit > getCandlesWeeks', async t => {
   ])
 })
 
+// 주(Week) 캔들
 test('upbit > getCandlesWeeks: params', async t => {
   const res = await upbit.getCandlesWeeks({
     market: 'KRW-BTC',
@@ -223,6 +229,7 @@ test('upbit > getCandlesWeeks: params', async t => {
   })
 })
 
+// 월(Month) 캔들
 test('upbit > getCandlesMonths', async t => {
   const res = await upbit.getCandlesMonths({market: 'KRW-BTC'})
   console.log(res)
@@ -244,6 +251,7 @@ test('upbit > getCandlesMonths', async t => {
   ])
 })
 
+// 월(Month) 캔들
 test('upbit > getCandlesMonths: params', async t => {
   const res = await upbit.getCandlesMonths({
     market: 'KRW-BTC',
@@ -282,6 +290,7 @@ test('upbit > getCandlesMonths: params', async t => {
   })
 })
 
+// 최근 체결 내역
 test('upbit > getTradesTicks', async t => {
   const res = await upbit.getTradesTicks({market: 'KRW-BTC'})
   console.log(res)
@@ -302,6 +311,7 @@ test('upbit > getTradesTicks', async t => {
   ])
 })
 
+// 최근 체결 내역
 test('upbit > getTradesTicks: params', async t => {
   const res = await upbit.getTradesTicks({
     market: 'KRW-BTC',
@@ -314,6 +324,7 @@ test('upbit > getTradesTicks: params', async t => {
   t.is(res.data.length, 10)
 })
 
+// 현재가 정보
 test('upbit > getTicker', async t => {
   const res = await upbit.getTicker({ markets: 'KRW-BTC' })
   console.log(res)
@@ -350,6 +361,7 @@ test('upbit > getTicker', async t => {
   ])
 })
 
+// 현재가 정보
 test('upbit > getTicker: 2 length', async t => {
   const res = await upbit.getTicker({ markets: 'KRW-BTC, KRW-ETH' })
   console.log(res)
@@ -358,6 +370,7 @@ test('upbit > getTicker: 2 length', async t => {
   t.is(res.data.length, 2)
 })
 
+// 호가 정보 조회
 test('upbit > getOrderbook', async t => {
   const res = await upbit.getOrderbook({ markets: 'KRW-BTC' })
   console.log(res)
@@ -381,6 +394,7 @@ test('upbit > getOrderbook', async t => {
   ])
 })
 
+// 호가 정보 조회
 test('upbit > getOrderbook: 2 length', async t => {
   const res = await upbit.getOrderbook({ markets: 'KRW-BTC, KRW-ADA' })
   console.log(res)
@@ -391,6 +405,7 @@ test('upbit > getOrderbook: 2 length', async t => {
   t.is(res.data.length, 2)
 })
 
+// 전체 계좌 조회
 test('upbit > getAccounts', async t => {
   const res = await upbit.getAccounts()
   console.log(res)
@@ -398,14 +413,16 @@ test('upbit > getAccounts', async t => {
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 
-test('upbit > getOrdersChance', async t => {
+// 주문 가능 정보
+test.only('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
   console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 
-test.only('upbit > getOrderList: default', async t => {
+// 주문 리스트 조회
+test('upbit > getOrderList: default (state: wait)', async t => {
   const res = await upbit.getOrderList()
   console.log(res)
   t.is(res.status, 200)
@@ -427,34 +444,47 @@ test.only('upbit > getOrderList: default', async t => {
   }
 })
 
-test('upbit > getOrderList', async t => {
-  //const res = await upbit.getOrderList({market: 'KRW-BTC'})
-  const res = await upbit.getOrderList()
+// 주문 리스트 조회
+test('upbit > getOrderList: market & state: done', async t => {
+  const res = await upbit.getOrderList({market: 'KRW-DKA', state: 'done'})
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
-  const data = res.data[0]
-  console.log(Object.keys(data))
-  t.deepEqual(Object.keys(data), [
-    'uuid',             'side',
-    'ord_type',         'price',
-    'state',            'market',
-    'created_at',       'volume',
-    'remaining_volume', 'reserved_fee',
-    'remaining_fee',    'paid_fee',
-    'locked',           'executed_volume',
-    'trades_count',
-  ])
-  // default
-  t.is(data.state, 'wait')
+  t.true(res.data.length !== 0)
+  res.data.forEach(d => {
+    t.is(d.market, 'KRW-DKA')
+    t.is(d.state, 'done')
+  })
 })
 
-// test('upbit > getOrderDetail', async t => {
-//   const res = await upbit.getOrderDetail({uuid: 'baduuid'})
-//   console.log(res)
-//   t.is(res.status, 200)
-//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
-// })
+// 개별 주문 조회
+test('upbit > getOrderDetail', async t => {
+  const res = await upbit.getOrderList({market: 'KRW-BTC', state: 'done'})
+  const uuid = res.data[0].uuid
+  const res2 = await upbit.getOrderDetail({uuid})
+  t.is(res2.status, 200)
+  t.deepEqual(Object.keys(res2.remainingReq), ['group', 'min', 'sec'])
+  console.log(JSON.stringify(res2, null, 2))
+  const data = res2.data
+  t.is(data.uuid, uuid)
+  t.is(data.market, 'KRW-BTC')
+  t.is(data.state, 'done')
+  t.is(data.trades_count, data.trades.length)
+})
+
+test('upbit > order', async t => {
+  const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
+  const price = trade.data[0].trade_price * 0.9
+  const res = await upbit.order({
+    market: 'KRW-BTC',
+    side: 'bid',
+    volume: 10000 * 70000000,
+    price,
+    ord_type: 'limit',
+  } as any)
+  t.is(res.status, 200)
+  t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+})
 
 // test('upbit > cancel', async t => {
 //   const res = await upbit.cancel({uuid: 'baduuid'})
@@ -463,16 +493,3 @@ test('upbit > getOrderList', async t => {
 //   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 // })
 
-// test.only('upbit > order', async t => {
-//   const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
-//   const price = trade.data[0].trade_price / 2
-//   const res = await upbit.order({
-//     market: 'KRW-BTC',
-//     side: 'bid',
-//     volume: 1,
-//     price,
-//     ord_type: 'limit',
-//   })
-//   t.is(res.status, 200)
-//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
-// })

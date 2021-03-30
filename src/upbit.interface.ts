@@ -297,14 +297,23 @@ export interface OrderType {
 }
 
 export interface OrderDetailType extends OrderType {
+  // 체결	Array[Object]
   trades: [
     {
+      // 마켓의 유일 키	String
       market: string
+      // 체결의 고유 아이디	String
       uuid: string
+      // 체결 가격	NumberString
       price: string
+      // 체결 양	NumberString
       volume: string
+      // 체결된 총 가격	NumberString
       funds: string
+      // 체결 종류	String
       side: 'bid'|'ask'
+      // 체결 시각	DateString
+      create_at: string
     }
   ]
 }
@@ -353,7 +362,9 @@ export interface TradeTickParam {
 }
 
 export interface OrderDetailParam {
-  uuid: string
+  // 주문 UUID	String
+  uuid?: string
+  // 조회용 사용자 지정 값	String
   identifier?: string
 }
 

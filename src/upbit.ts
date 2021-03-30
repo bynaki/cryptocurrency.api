@@ -144,6 +144,11 @@ export class UPbit {
     return this._exchange('/orders/chance', 'GET', {params})
   }
 
+  /**
+   * 개별 주문 조회
+   * 주문 UUID 를 통해 개별 주문건을 조회한다.
+   * https://docs.upbit.com/reference#%EA%B0%9C%EB%B3%84-%EC%A3%BC%EB%AC%B8-%EC%A1%B0%ED%9A%8C
+  **/
   getOrderDetail(params: I.OrderDetailParam): Promise<I.Response<I.OrderDetailType>> {
     return this._exchange('/order', 'GET', {params})
   }

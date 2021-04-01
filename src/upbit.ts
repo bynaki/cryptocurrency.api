@@ -148,6 +148,8 @@ export class UPbit {
    * 개별 주문 조회
    * 주문 UUID 를 통해 개별 주문건을 조회한다.
    * https://docs.upbit.com/reference#%EA%B0%9C%EB%B3%84-%EC%A3%BC%EB%AC%B8-%EC%A1%B0%ED%9A%8C
+   * uuid: 주문 UUID	String
+   * identifier: 조회용 사용자 지정 값	String
   **/
   getOrderDetail(params: I.OrderDetailParam): Promise<I.Response<I.OrderDetailType>> {
     return this._exchange('/order', 'GET', {params})
@@ -161,17 +163,17 @@ export class UPbit {
    * uuids: 주문 UUID의 목록 Array
    * identifiers: 주문 identifier의 목록 Array
    * state: 주문 상태 String
-   * - wait : 체결 대기 (default)
-   * - watch : 예약주문 대기
-   * - done : 전체 체결 완료
-   * - cancel : 주문 취소
+   *   - wait : 체결 대기 (default)
+   *   - watch : 예약주문 대기
+   *   - done : 전체 체결 완료
+   *   - cancel : 주문 취소
    * states: 주문 상태의 목록 Array
    * * 미체결 주문(wait, watch)과 완료 주문(done, cancel)은 혼합하여 조회하실 수 없습니다.
    * page: 페이지 수, default: 1 Number
    * limit: 요청 개수, default: 100 Number
    * order_by: 정렬 방식
-   * - asc : 오름차순
-   * - desc : 내림차순 (default) String
+   *   - asc : 오름차순
+   *   - desc : 내림차순 (default) String
   **/
   getOrderList(params?: I.OrderListParam): Promise<I.Response<I.OrderType[]>> {
     return this._exchange('/orders', 'GET', {params})
@@ -181,21 +183,39 @@ export class UPbit {
     return this._exchange('/order', 'DELETE', {params})
   }
 
+  /**
+   * 주문하기
+   * 주문 요청을 한다. 
+   * https://docs.upbit.com/reference#%EC%A3%BC%EB%AC%B8%ED%95%98%EA%B8%B0
+   * market *	마켓 ID (필수)	String
+   * side *	주문 종류 (필수)
+   *   - bid : 매수
+   *   - ask : 매도	String
+   * volume *	주문량 (지정가, 시장가 매도 시 필수)	NumberString
+   * price *	주문 가격. (지정가, 시장가 매수 시 필수)
+   *   ex) KRW-BTC 마켓에서 1BTC당 1,000 KRW로 거래할 경우, 값은 1000 이 된다.
+   *   ex) KRW-BTC 마켓에서 1BTC당 매도 1호가가 500 KRW 인 경우, 시장가 매수 시 값을 1000으로 세팅하면 2BTC가 매수된다.
+   *   (수수료가 존재하거나 매도 1호가의 수량에 따라 상이할 수 있음)	NumberString
+   * ord_type *	주문 타입 (필수)
+   *   - limit : 지정가 주문
+   *   - price : 시장가 주문(매수)
+   *   - market : 시장가 주문(매도)	String
+   * identifier	조회용 사용자 지정값 (선택)	String (Uniq 값 사용)
+   * --
+   * 원화 마켓 가격 단위를 확인하세요.
+   * 원화 마켓에서 주문을 요청 할 경우, 원화 마켓 주문 가격 단위 를 확인하여 값을 입력해주세요.
+   * --
+   * identifier 파라미터 사용
+   * identifier는 서비스에서 발급하는 uuid가 아닌 이용자가 직접 발급하는 키값으로, 주문을 조회하기 위해 할당하는 값입니다. 해당 값은 사용자의 전체 주문 내 유일한 값을 전달해야하며, 비록 주문 요청시 오류가 발생하더라도 같은 값으로 다시 요청을 보낼 수 없습니다.
+   * 주문의 성공 / 실패 여부와 관계없이 중복해서 들어온 identifier 값에서는 중복 오류가 발생하니, 매 요청시 새로운 값을 생성해주세요.
+   * --
+   * 시장가 주문
+   * 시장가 주문은 ord_type 필드를 price or market 으로 설정해야됩니다.
+   * 매수 주문의 경우 ord_type을 price로 설정하고 volume을 null 혹은 제외해야됩니다.
+   * 매도 주문의 경우 ord_type을 market로 설정하고 price을 null 혹은 제외해야됩니다.
+  **/
   order(params: I.OrderParam): Promise<I.Response<I.OrderExType>> {
-    //const pp = Object.assign({}, {
-      //market: params.market,
-      //side: params.side,
-      //ord_type: params.ord_type,
-      //identifier: params.identifier,
-    //})
-    //if(Object.keys(params).includes('price')) {
-      //pp['price'] = params.price.toString()
-    //}
-    //if(Object.keys(params).includes('volume')) {
-      //pp['volume'] = params.volume.toString()
-    //}
-    //return this._exchange('/orders', 'POST', {data: pp})
-    return this._exchange('/orders', 'POST', {params, data: params})
+    return this._exchange('/orders', 'POST', {params})
   }
 
   private async _quotation(endPoint: string, params?: any): Promise<I.Response<any>> {
@@ -241,7 +261,7 @@ export class UPbit {
         Authorization: `Bearer ${token}`,
       },
       params: pp,
-      data,
+      //data: params,
     })
     return {
       status: res.status,

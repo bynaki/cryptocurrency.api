@@ -414,7 +414,7 @@ test('upbit > getAccounts', async t => {
 })
 
 // 주문 가능 정보
-test('upbit > getOrdersChance', async t => {
+test.only('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
   console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
@@ -422,7 +422,7 @@ test('upbit > getOrdersChance', async t => {
 })
 
 // 주문 리스트 조회
-test('upbit > getOrderList: default (state: wait)', async t => {
+test.only('upbit > getOrderList: default (state: wait)', async t => {
   const res = await upbit.getOrderList()
   console.log(res)
   t.is(res.status, 200)
@@ -445,7 +445,7 @@ test('upbit > getOrderList: default (state: wait)', async t => {
 })
 
 // 주문 리스트 조회
-test('upbit > getOrderList: market & state: done', async t => {
+test.only('upbit > getOrderList: market & state: done', async t => {
   const res = await upbit.getOrderList({market: 'KRW-DKA', state: 'done'})
   console.log(res)
   t.is(res.status, 200)
@@ -458,7 +458,7 @@ test('upbit > getOrderList: market & state: done', async t => {
 })
 
 // 개별 주문 조회
-test('upbit > getOrderDetail', async t => {
+test.only('upbit > getOrderDetail', async t => {
   const res = await upbit.getOrderList({market: 'KRW-BTC', state: 'done'})
   const uuid = res.data[0].uuid
   const res2 = await upbit.getOrderDetail({uuid})
@@ -472,6 +472,7 @@ test('upbit > getOrderDetail', async t => {
   t.is(data.trades_count, data.trades.length)
 })
 
+// 주문하기
 test.only('upbit > order', async t => {
   const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
   const price = (trade.data[0].trade_price * 0.9) - ((trade.data[0].trade_price * 0.9) % 1000)

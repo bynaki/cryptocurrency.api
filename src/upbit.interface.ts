@@ -395,8 +395,8 @@ export interface OrderListParam {
 export interface OrderParam {
   market: string
   side: 'bid'|'ask'
-  volume?: number
-  price: number
+  volume?: string
+  price?: string
   ord_type: 'limit'|'price'|'market'
   identifier?: string
 }

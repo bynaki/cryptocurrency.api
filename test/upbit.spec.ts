@@ -414,7 +414,7 @@ test('upbit > getAccounts', async t => {
 })
 
 // 주문 가능 정보
-test.only('upbit > getOrdersChance', async t => {
+test('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
   console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
@@ -472,17 +472,26 @@ test('upbit > getOrderDetail', async t => {
   t.is(data.trades_count, data.trades.length)
 })
 
-test('upbit > order', async t => {
+test.only('upbit > order', async t => {
   const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
-  const price = trade.data[0].trade_price * 0.9
+  const price = (trade.data[0].trade_price * 0.9) - ((trade.data[0].trade_price * 0.9) % 1000)
+  const params = {
+    market: 'KRW-BTC',
+    side: 'bid',
+    volume: (10000 / price).toString(),
+    price: price.toString(),
+    ord_type: 'limit',
+  }
+  console.log(`params: ${JSON.stringify(params)}`)
   const res = await upbit.order({
     market: 'KRW-BTC',
     side: 'bid',
-    volume: 10000 * 70000000,
-    price,
+    volume: (10000 / price).toString(),
+    price: price.toString(),
     ord_type: 'limit',
-  } as any)
-  t.is(res.status, 200)
+  })
+  console.log(res)
+  t.is(res.status, 201)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
 })
 

@@ -182,7 +182,20 @@ export class UPbit {
   }
 
   order(params: I.OrderParam): Promise<I.Response<I.OrderExType>> {
-    return this._exchange('/orders', 'POST', {data: params})
+    //const pp = Object.assign({}, {
+      //market: params.market,
+      //side: params.side,
+      //ord_type: params.ord_type,
+      //identifier: params.identifier,
+    //})
+    //if(Object.keys(params).includes('price')) {
+      //pp['price'] = params.price.toString()
+    //}
+    //if(Object.keys(params).includes('volume')) {
+      //pp['volume'] = params.volume.toString()
+    //}
+    //return this._exchange('/orders', 'POST', {data: pp})
+    return this._exchange('/orders', 'POST', {params, data: params})
   }
 
   private async _quotation(endPoint: string, params?: any): Promise<I.Response<any>> {

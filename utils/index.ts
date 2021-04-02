@@ -12,6 +12,7 @@ import {
 
 
 export async function copyAssets(src: string, dest: string, ...exceptions: string[]) {
+  console.log('started to copy assets ...')
   let files: string[] = glob.sync(src, {nodir: true, dot: true})
   exceptions.forEach(except => {
     const cs: string[] = glob.sync(except, {nodir: true, dot: true})
@@ -24,6 +25,7 @@ export async function copyAssets(src: string, dest: string, ...exceptions: strin
       console.log(`copied: ${s} > ${d}`)
     }
   })
+  console.log('finished copyng assets.')
 }
 
 const releaseDir = '../../www/release'

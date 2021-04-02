@@ -179,6 +179,13 @@ export class UPbit {
     return this._exchange('/orders', 'GET', {params})
   }
 
+  /**
+   * 주문 취소 접수
+   * 주문 UUID를 통해 해당 주문에 대한 취소 접수를 한다.
+   * https://docs.upbit.com/reference#주문-취소
+   * uuid:	취소할 주문의 UUID	String
+   * identifier:	조회용 사용자 지정값	String
+  **/
   cancel(params: I.CancelParam): Promise<I.Response<I.OrderType>> {
     return this._exchange('/order', 'DELETE', {params})
   }

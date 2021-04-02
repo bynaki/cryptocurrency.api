@@ -3,7 +3,7 @@
 export interface Response<T> {
   status: number
   remainingReq: {
-    market: string
+    group: string
     min: number
     sec: number
   }
@@ -417,5 +417,8 @@ export interface OrderParam {
 }
 
 export interface CancelParam {
-  uuid: string
+  // 취소할 주문의 UUID	String
+  uuid?: string
+  // 조회용 사용자 지정값	String
+  identifier?: string
 }

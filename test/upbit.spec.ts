@@ -414,7 +414,7 @@ test('upbit > getAccounts', async t => {
 })
 
 // 주문 가능 정보
-test.only('upbit > getOrdersChance', async t => {
+test('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
   console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
@@ -422,7 +422,7 @@ test.only('upbit > getOrdersChance', async t => {
 })
 
 // 주문 리스트 조회
-test.only('upbit > getOrderList: default (state: wait)', async t => {
+test('upbit > getOrderList: default (state: wait)', async t => {
   const res = await upbit.getOrderList()
   console.log(res)
   t.is(res.status, 200)
@@ -445,7 +445,7 @@ test.only('upbit > getOrderList: default (state: wait)', async t => {
 })
 
 // 주문 리스트 조회
-test.only('upbit > getOrderList: market & state: done', async t => {
+test('upbit > getOrderList: market & state: done', async t => {
   const res = await upbit.getOrderList({market: 'KRW-DKA', state: 'done'})
   console.log(res)
   t.is(res.status, 200)
@@ -458,7 +458,7 @@ test.only('upbit > getOrderList: market & state: done', async t => {
 })
 
 // 개별 주문 조회
-test.only('upbit > getOrderDetail', async t => {
+test('upbit > getOrderDetail', async t => {
   const res = await upbit.getOrderList({market: 'KRW-BTC', state: 'done'})
   const uuid = res.data[0].uuid
   const res2 = await upbit.getOrderDetail({uuid})
@@ -472,8 +472,8 @@ test.only('upbit > getOrderDetail', async t => {
   t.is(data.trades_count, data.trades.length)
 })
 
-// 주문하기
-test.only('upbit > order', async t => {
+// 주문하기 & 주문 취소 접수
+test('upbit > order & cancel', async t => {
   const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
   const price = (trade.data[0].trade_price * 0.9) - ((trade.data[0].trade_price * 0.9) % 1000)
   const params = {
@@ -484,22 +484,21 @@ test.only('upbit > order', async t => {
     ord_type: 'limit',
   }
   console.log(`params: ${JSON.stringify(params)}`)
-  const res = await upbit.order({
+  const order = await upbit.order({
     market: 'KRW-BTC',
     side: 'bid',
     volume: (10000 / price).toString(),
     price: price.toString(),
     ord_type: 'limit',
   })
-  console.log(res)
-  t.is(res.status, 201)
-  t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+  console.log(order)
+  t.is(order.status, 201)
+  t.deepEqual(Object.keys(order.remainingReq), ['group', 'min', 'sec'])
+  t.is(order.remainingReq.group, 'order')
+  const cancel = await upbit.cancel({uuid: order.data.uuid})
+  console.log(cancel)
+  t.is(cancel.status, 200)
+  t.deepEqual(Object.keys(cancel.remainingReq), ['group', 'min', 'sec'])
+  t.is(cancel.remainingReq.group, 'default')
 })
-
-// test('upbit > cancel', async t => {
-//   const res = await upbit.cancel({uuid: 'baduuid'})
-//   console.log(res)
-//   t.is(res.status, 200)
-//   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
-// })
 

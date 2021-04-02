@@ -1,0 +1,14 @@
+{
+  "bithumb": {
+    "connectKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "secretKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "binance": {
+    "APIKEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "APISECRET": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "upbit": {
+    "accessKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "secretKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
+}

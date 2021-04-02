@@ -1,6 +1,19 @@
 # Cryptocurrency API
 
 
+## Setting Config File
+
+* rename `config.base.json` to `config.json`
+* correct `config.json`
+
+
+## Test
+
+```bash
+yarn test
+```
+
+
 ## Publish
 
 ```bash

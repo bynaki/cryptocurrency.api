@@ -13,9 +13,10 @@ const cf = getConfig('./config.json')
 const upbit = new UPbit(cf.upbit)
 
 // 마켓 코드 조회
-test('upbit > getMarket', async t => {
+test.only('upbit > getMarket', async t => {
   const res = await upbit.getMarket()
-  console.log(res)
+  const re = /^KRW-/
+  res.data.filter(d => re.test(d.market)).forEach(d => console.log(d.market))
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.deepEqual(res.data.filter(d => d.market === 'KRW-BTC')[0], {

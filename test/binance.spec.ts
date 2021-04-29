@@ -1,7 +1,7 @@
 import test from 'ava'
 import {
   Binance,
-  IBinance as I,
+  binance_types as I,
 } from '../src'
 import {
   getConfig,

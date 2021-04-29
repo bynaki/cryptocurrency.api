@@ -1,9 +1,7 @@
-export * from './bithumb.interface'
-export * from './bithumb'
 export * from './binance'
-import * as IBinance from './binance.interface'
-export {IBinance}
+import * as binance_types from './binance.types'
+export {binance_types}
 export * from './upbit'
-import * as IUpbit from './upbit.interface'
-export {IUpbit}
+import * as upbit_types from './upbit.types'
+export {upbit_types}
 export {AxiosError} from 'axios'

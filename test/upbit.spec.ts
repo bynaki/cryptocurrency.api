@@ -13,7 +13,7 @@ const cf = getConfig('./config.json')
 const upbit = new UPbit(cf.upbit)
 
 // 마켓 코드 조회
-test.only('upbit > getMarket', async t => {
+test('upbit > getMarket', async t => {
   const res = await upbit.getMarket()
   const re = /^KRW-/
   res.data.filter(d => re.test(d.market)).forEach(d => console.log(d.market))
@@ -369,6 +369,8 @@ test('upbit > getTicker: 2 length', async t => {
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.is(res.data.length, 2)
+  t.is(res.data[0].market, 'KRW-BTC')
+  t.is(res.data[1].market, 'KRW-ETH')
 })
 
 // 호가 정보 조회
@@ -429,7 +431,6 @@ test('upbit > getOrderList: default (state: wait)', async t => {
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   if(res.data.length !== 0) {
-    console.log(Object.keys(res.data[0]))
     t.deepEqual(Object.keys(res.data[0]), [
       'uuid',             'side',
       'ord_type',         'price',

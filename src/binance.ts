@@ -1,5 +1,5 @@
 import * as binance from 'node-binance-api'
-import * as I from './binance.interface'
+import * as I from './binance.types'
 import {
   clone,
 } from 'lodash'

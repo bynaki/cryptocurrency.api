@@ -1,5 +1,5 @@
 import axios from 'axios'
-import * as I from './upbit.interface'
+import * as I from './upbit.types'
 import {
   v4 as uuidv4,
 } from 'uuid'
@@ -10,9 +10,6 @@ import * as crypto from 'crypto'
 import {
   stringify
 } from 'querystring'
-import {
-  isArray,
-} from 'util'
 
 
 /**
@@ -246,7 +243,7 @@ export class UPbit {
     if(params) {
       pp = {}
       for(let key in params) {
-        if(isArray(params[key])) {
+        if(Array.isArray(params[key])) {
           pp[`${key}[]`] = params[key]
         } else {
           pp[key] = params[key]

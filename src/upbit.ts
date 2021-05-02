@@ -1,4 +1,6 @@
-import axios from 'axios'
+import axios, {
+  Method,
+} from 'axios'
 import * as I from './upbit.types'
 import {
   v4 as uuidv4,
@@ -218,7 +220,7 @@ export class UPbit {
    * 매수 주문의 경우 ord_type을 price로 설정하고 volume을 null 혹은 제외해야됩니다.
    * 매도 주문의 경우 ord_type을 market로 설정하고 price을 null 혹은 제외해야됩니다.
   **/
-  order(params: I.OrderParam): Promise<I.Response<I.OrderExType>> {
+  order(params: I.OrderLimitParam | I.OrderPriceParam | I.OrderMarketParam): Promise<I.Response<I.OrderExType>> {
     return this._exchange('/orders', 'POST', {params})
   }
 
@@ -231,7 +233,7 @@ export class UPbit {
     }
   }
 
-  private async _exchange(endPoint: string, method: string, {params, data}: {
+  private async _exchange(endPoint: string, method: Method, {params, data}: {
     params?: any
     data?: any
   } = {}): Promise<I.Response<any>> {
@@ -282,4 +284,9 @@ export class UPbit {
       return o
     }, {})
   }
+}
+
+
+export {
+  I as types,
 }

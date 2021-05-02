@@ -4,7 +4,7 @@ import {
 } from '../src/utils'
 import {
   UPbit,
-} from '../src'
+} from '../src/upbit'
 import { AxiosError } from 'axios';
 
 

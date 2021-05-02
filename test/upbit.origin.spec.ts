@@ -1,8 +1,8 @@
 import test from 'ava'
-import {
-  getConfig,
-} from '../src/utils'
-import axios, { AxiosError } from 'axios'
+import axios, {
+  AxiosError,
+  Method,
+} from 'axios'
 
 
 interface MarketType {
@@ -18,7 +18,10 @@ test.only('마켓 코드 조회', async t => {
     url: 'https://api.upbit.com/v1/market/all',
   }
   try {
-    const res = await axios(config)
+    const res = await axios({
+      method: 'GET',
+      url: 'https://api.upbit.com/v1/market/all',
+    })
     const data: MarketType[] = res.data
     const pt = /^KRW-/
     console.log(data.filter(i => pt.test(i.market)))

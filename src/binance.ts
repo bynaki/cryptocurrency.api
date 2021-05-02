@@ -181,3 +181,8 @@ function transType(data) {
   }
   return cpData
 }
+
+
+export {
+  I as types,
+}

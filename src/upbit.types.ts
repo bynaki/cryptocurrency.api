@@ -193,6 +193,84 @@ export interface AccountType {
   unit_currency: string
 }
 
+/**
+ * {
+ *   // 매수 수수료 비율	NumberString
+ *   "bid_fee": "0.0005",
+ *   // 매도 수수료 비율	NumberString
+ *   "ask_fee": "0.0005",
+ *   "maker_bid_fee": "0.0005",
+ *   "maker_ask_fee": "0.0005",
+ *   // 마켓에 대한 정보	Object
+ *   "market": {
+ *     // 마켓의 유일 키	String
+ *     "id": "KRW-BTC",
+ *     // 마켓 이름	String
+ *     "name": "BTC/KRW",
+ *     // 지원 주문 방식	Array[String]
+ *     "order_types": [
+ *       "limit"
+ *     ],
+ *     // 지원 주문 종류	Array[String]
+ *     "order_sides": [
+ *       "ask",
+ *       "bid"
+ *     ],
+ *     // 매수 시 제약사항	Object
+ *     "bid": {
+ *       // 화폐를 의미하는 영문 대문자 코드	String
+ *       "currency": "KRW",
+ *       // 주문금액 단위	String
+ *       "price_unit": null,
+ *       // 최소 매도/매수 금액	Number
+ *       "min_total": "5000.0"
+ *     },
+ *     // 매도 시 제약사항	Object
+ *     "ask": {
+ *       // 화폐를 의미하는 영문 대문자 코드	String
+ *       "currency": "BTC",
+ *       // 주문금액 단위	String
+ *       "price_unit": null,
+ *       // 최소 매도/매수 금액	Number
+ *       "min_total": "5000.0"
+ *     },
+ *     // 최소 매도/매수 금액	Number
+ *     "max_total": "1000000000.0",
+ *     // 마켓 운영 상태	String
+ *     "state": "active"
+ *   },
+ *   // 매수 시 사용하는 화폐의 계좌 상태	Object
+ *   "bid_account": {
+ *     // 화폐를 의미하는 영문 대문자 코드	String
+ *     "currency": "KRW",
+ *     // 주문가능 금액/수량	NumberString
+ *     "balance": "132568.11667565",
+ *     // 주문 중 묶여있는 금액/수량	NumberString
+ *     "locked": "0.0",
+ *     // 매수평균가	NumberString
+ *     "avg_buy_price": "0",
+ *     // 매수평균가 수정 여부	Boolean
+ *     "avg_buy_price_modified": true,
+ *     // 평단가 기준 화폐	String
+ *     "unit_currency": "KRW"
+ *   },
+ *   // 매도 시 사용하는 화폐의 계좌 상태	Object
+ *   "ask_account": {
+ *     // 화폐를 의미하는 영문 대문자 코드	String
+ *     "currency": "BTC",
+ *     // 주문가능 금액/수량	NumberString
+ *     "balance": "0.0",
+ *     // 주문 중 묶여있는 금액/수량	NumberString
+ *     "locked": "0.0",
+ *     // 매수평균가	NumberString
+ *     "avg_buy_price": "60887000",
+ *     // 매수평균가 수정 여부	Boolean
+ *     "avg_buy_price_modified": false,
+ *     // 평단가 기준 화폐	String
+ *     "unit_currency": "KRW"
+ *   }
+ * }
+**/
 export interface OrderChanceType {
   // 매수 수수료 비율	NumberString
   bid_fee: string
@@ -393,7 +471,8 @@ export interface OrderListParam {
   order_by?: 'desc'|'asc'
 }
 
-export interface OrderParam {
+// 지정가 매수 매도
+export interface OrderLimitParam {
   // 마켓 ID (필수)	String
   market: string
   // 주문 종류 (필수) String
@@ -411,10 +490,29 @@ export interface OrderParam {
   // - limit : 지정가 주문
   // - price : 시장가 주문(매수)
   // - market : 시장가 주문(매도)
-  ord_type: 'limit'|'price'|'market'
+  ord_type: 'limit'
   // 조회용 사용자 지정값 (선택)	String (Uniq 값 사용)
   identifier?: string
+} 
+
+// 시장가 매수
+export interface OrderPriceParam {
+  market: string
+  side: 'bid'
+  price: string
+  ord_type: 'price'
+  identifier?: string
 }
+
+// 시장가 매도
+export interface OrderMarketParam {
+  market: string
+  sdie: 'ask'
+  volume: string
+  ord_type: 'market'
+  identifier?: string
+}
+
 
 export interface CancelParam {
   // 취소할 주문의 UUID	String

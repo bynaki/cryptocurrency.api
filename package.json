@@ -1,6 +1,6 @@
 {
   "name": "cryptocurrency.api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cryptocurrency API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
     "url": "https://github.com/bynaki/cryptocurrency.api.git"
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 15.0.0"
   },
   "keywords": [
     "node",

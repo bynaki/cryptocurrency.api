@@ -372,6 +372,8 @@ export interface OrderType {
   executed_volume: string
   // 해당 주문에 걸린 체결 수 Integer
   trades_count: number
+  // 조회용 사용자 지정값	String
+  identifier?: string
 }
 
 export interface OrderDetailType extends OrderType {
@@ -475,6 +477,11 @@ export interface OrderListParam {
 export interface OrderLimitParam {
   // 마켓 ID (필수)	String
   market: string
+  // 주문 타입 (필수) String
+  // - limit : 지정가 주문
+  // - price : 시장가 주문(매수)
+  // - market : 시장가 주문(매도)
+  ord_type: 'limit'
   // 주문 종류 (필수) String
   // - bid : 매수
   // - ask : 매도
@@ -486,11 +493,6 @@ export interface OrderLimitParam {
   // ex) KRW-BTC 마켓에서 1BTC당 매도 1호가가 500 KRW 인 경우, 시장가 매수 시 값을 1000으로 세팅하면 2BTC가 매수된다.
   // (수수료가 존재하거나 매도 1호가의 수량에 따라 상이할 수 있음)
   price: string
-  // 주문 타입 (필수) String
-  // - limit : 지정가 주문
-  // - price : 시장가 주문(매수)
-  // - market : 시장가 주문(매도)
-  ord_type: 'limit'
   // 조회용 사용자 지정값 (선택)	String (Uniq 값 사용)
   identifier?: string
 } 
@@ -498,18 +500,18 @@ export interface OrderLimitParam {
 // 시장가 매수
 export interface OrderPriceParam {
   market: string
+  ord_type: 'price'
   side: 'bid'
   price: string
-  ord_type: 'price'
   identifier?: string
 }
 
 // 시장가 매도
 export interface OrderMarketParam {
   market: string
-  sdie: 'ask'
-  volume: string
   ord_type: 'market'
+  side: 'ask'
+  volume: string
   identifier?: string
 }
 

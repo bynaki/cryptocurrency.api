@@ -16,3 +16,4 @@ yarn.lock
 tsconfig.*json
 .gitignore
 config.json
+config2.json

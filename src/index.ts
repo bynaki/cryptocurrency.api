@@ -7,3 +7,4 @@ export {
   Binance,
 } from './binance'
 export * as binance_types from './binance.types'
+export * from './utils'

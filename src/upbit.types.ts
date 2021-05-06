@@ -182,11 +182,11 @@ export interface AccountType {
   // 화폐를 의미하는 영문 대문자 코드 String
   currency: string
   // 주문가능 금액/수량 NumberString
-  balance: string
+  balance: number
   // 주문 중 묶여있는 금액/수량 NumberString
-  locked: string
+  locked: number
   // 매수평균가 NumberString
-  avg_buy_price: string
+  avg_buy_price: number
   // 매수평균가 수정 여부 Boolen
   avg_buy_price_modified: boolean
   // 평단가 기준 화폐 String
@@ -273,10 +273,12 @@ export interface AccountType {
 **/
 export interface OrderChanceType {
   // 매수 수수료 비율	NumberString
-  bid_fee: string
+  bid_fee: number
   // 매도 수수료 비율	NumberString
-  ask_fee: string
+  ask_fee: number
   // 마켓에 대한 정보	Object
+  marker_bid_fee: number
+  marker_ask_fee: number
   market: {
     // 마켓의 유일 키	String
     id: string
@@ -305,7 +307,7 @@ export interface OrderChanceType {
       min_total: number
     },
     // 최대 매도/매수 금액	NumberString
-    max_total: string
+    max_total: number
     // 마켓 운영 상태	String
     state: string
   },
@@ -314,11 +316,11 @@ export interface OrderChanceType {
     // 화폐를 의미하는 영문 대문자 코드	String
     currency: string
     // 주문가능 금액/수량	NumberString
-    balance: string
+    balance: number
     // 주문 중 묶여있는 금액/수량	NumberString
-    locked: string
+    locked: number
     // 매수평균가	NumberString
-    avg_buy_price: string
+    avg_buy_price: number
     // 매수평균가 수정 여부	Boolean
     avg_buy_price_modified: boolean
     // 평단가 기준 화폐	String
@@ -329,11 +331,11 @@ export interface OrderChanceType {
     // 화폐를 의미하는 영문 대문자 코드	String
     currency: string
     // 주문가능 금액/수량	NumberString
-    balance: string
+    balance: number
     // 주문 중 묶여있는 금액/수량	NumberString
-    locked: string
+    locked: number
     // 매수평균가	NumberString
-    avg_buy_price: string
+    avg_buy_price: number
     // 매수평균가 수정 여부	Boolean
     avg_buy_price_modified: boolean
     // 평단가 기준 화폐	String
@@ -349,7 +351,7 @@ export interface OrderType {
   // 주문 방식 String
   ord_type: 'limit'|'price'|'market'
   // 주문 당시 화폐 가격 NumberString
-  price: string
+  price: number
   // 주문 상태 String
   state: 'wait'|'watch'|'done'|'cancel'
   // 마켓의 유일키 String
@@ -357,19 +359,19 @@ export interface OrderType {
   // 주문 생성 시간 DateString
   created_at: string
   // 사용자가 입력한 주문 양 NumberString
-  volume: string
+  volume: number
   // 체결 후 남은 주문 양 NumberString
-  remaining_volume: string
+  remaining_volume: number
   // 수수료로 예약된 비용 NumberString
-  reserved_fee: string
+  reserved_fee: number
   // 남은 수수료 NumberString
-  remaining_fee: string
+  remaining_fee: number
   // 사용된 수수료 NumberString
-  paid_fee: string
+  paid_fee: number
   // 거래에 사용중인 비용 NumberString
-  locked: string
+  locked: number
   // 체결된 양 NumberString
-  executed_volume: string
+  executed_volume: number
   // 해당 주문에 걸린 체결 수 Integer
   trades_count: number
   // 조회용 사용자 지정값	String
@@ -385,11 +387,11 @@ export interface OrderDetailType extends OrderType {
       // 체결의 고유 아이디	String
       uuid: string
       // 체결 가격	NumberString
-      price: string
+      price: number
       // 체결 양	NumberString
-      volume: string
+      volume: number
       // 체결된 총 가격	NumberString
-      funds: string
+      funds: number
       // 체결 종류	String
       side: 'bid'|'ask'
       // 체결 시각	DateString
@@ -487,12 +489,12 @@ export interface OrderLimitParam {
   // - ask : 매도
   side: 'bid'|'ask'
   // 주문량 (지정가, 시장가 매도 시 필수)	NumberString
-  volume: string
+  volume: number
   // 주문 가격. (지정가, 시장가 매수 시 필수) NumberString
   // ex) KRW-BTC 마켓에서 1BTC당 1,000 KRW로 거래할 경우, 값은 1000 이 된다.
   // ex) KRW-BTC 마켓에서 1BTC당 매도 1호가가 500 KRW 인 경우, 시장가 매수 시 값을 1000으로 세팅하면 2BTC가 매수된다.
   // (수수료가 존재하거나 매도 1호가의 수량에 따라 상이할 수 있음)
-  price: string
+  price: number
   // 조회용 사용자 지정값 (선택)	String (Uniq 값 사용)
   identifier?: string
 } 
@@ -502,7 +504,7 @@ export interface OrderPriceParam {
   market: string
   ord_type: 'price'
   side: 'bid'
-  price: string
+  price: number
   identifier?: string
 }
 
@@ -511,7 +513,7 @@ export interface OrderMarketParam {
   market: string
   ord_type: 'market'
   side: 'ask'
-  volume: string
+  volume: number
   identifier?: string
 }
 

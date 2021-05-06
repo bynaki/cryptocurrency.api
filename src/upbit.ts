@@ -12,6 +12,9 @@ import * as crypto from 'crypto'
 import {
   stringify
 } from 'querystring'
+import {
+  toNumbers,
+} from './utils'
 
 
 /**
@@ -49,7 +52,7 @@ export class UPbit {
    * CandleParam.to: 마지막 캔들 시각 (exclusive). 포맷 : yyyy-MM-dd'T'HH:mm:ssXXX or yyyy-MM-dd HH:mm:ss. 비워서 요청시 가장 최근 캔들
    * CandleParam.cout: 캔들 개수(최대 200개까지 요청 가능)
   **/
-  getCandlesMinutes(min: number, params: I.CandleParam): Promise<I.Response<I.CandleMinuteType[]>> {
+  getCandlesMinutes(min: 1|3|5|15|10|30|60|240, params: I.CandleParam): Promise<I.Response<I.CandleMinuteType[]>> {
     return this._quotation(`/candles/minutes/${min}`, params)
   }
 
@@ -107,9 +110,10 @@ export class UPbit {
    * markets*: string 반점으로 구분되는 마켓 코드 (ex. KRW-BTC, BTC-BCC)
   **/
   getTicker(params: {
-    markets: string
+    markets: string[]
   }): Promise<I.Response<I.TickerType[]>> {
-    return this._quotation('/ticker', params)
+    const pp = {markets: params.markets.join(', ')}
+    return this._quotation('/ticker', pp)
   }
 
   /**
@@ -118,9 +122,10 @@ export class UPbit {
    * markets*: array of strings 마켓 코드 목록 (ex. KRW-BTC,KRW-ADA)
   **/
   getOrderbook(params: {
-    markets: string
+    markets: string[]
   }): Promise<I.Response<I.OrderbookType[]>> {
-    return this._quotation('/orderbook', params)
+    const pp = {markets: params.markets.join(', ')}
+    return this._quotation('/orderbook', pp)
   }
 
   /**
@@ -128,8 +133,10 @@ export class UPbit {
    * 내가 보유한 자산 리스트를 보여줍니다.
    * https://docs.upbit.com/reference#%EC%9E%90%EC%82%B0-%EC%A1%B0%ED%9A%8C
   **/
-  getAccounts(): Promise<I.Response<I.AccountType[]>> {
-    return this._exchange('/accounts', 'GET')
+  async getAccounts(): Promise<I.Response<I.AccountType[]>> {
+    const res = await this._exchange('/accounts', 'GET')
+    res.data = toNumbers(res.data)
+    return res
   }
 
   /**
@@ -137,10 +144,12 @@ export class UPbit {
    * https://docs.upbit.com/reference#%EC%A3%BC%EB%AC%B8-%EA%B0%80%EB%8A%A5-%EC%A0%95%EB%B3%B4
    * market *:	마켓ID	String
   **/
-  getOrdersChance(params: {
+  async getOrdersChance(params: {
     market: string
   }): Promise<I.Response<I.OrderChanceType>> {
-    return this._exchange('/orders/chance', 'GET', {params})
+    const res = await this._exchange('/orders/chance', 'GET', {params})
+    res.data = toNumbers(res.data)
+    return res
   }
 
   /**
@@ -150,8 +159,10 @@ export class UPbit {
    * uuid: 주문 UUID	String
    * identifier: 조회용 사용자 지정 값	String
   **/
-  getOrderDetail(params: I.OrderDetailParam): Promise<I.Response<I.OrderDetailType>> {
-    return this._exchange('/order', 'GET', {params})
+  async getOrderDetail(params: I.OrderDetailParam): Promise<I.Response<I.OrderDetailType>> {
+    const res =  await this._exchange('/order', 'GET', {params})
+    res.data = toNumbers(res.data)
+    return res
   }
 
   /**
@@ -174,8 +185,10 @@ export class UPbit {
    *   - asc : 오름차순
    *   - desc : 내림차순 (default) String
   **/
-  getOrderList(params?: I.OrderListParam): Promise<I.Response<I.OrderType[]>> {
-    return this._exchange('/orders', 'GET', {params})
+  async getOrderList(params?: I.OrderListParam): Promise<I.Response<I.OrderType[]>> {
+    const res = await this._exchange('/orders', 'GET', {params})
+    res.data = toNumbers(res.data)
+    return res
   }
 
   /**
@@ -185,8 +198,10 @@ export class UPbit {
    * uuid:	취소할 주문의 UUID	String
    * identifier:	조회용 사용자 지정값	String
   **/
-  cancel(params: I.CancelParam): Promise<I.Response<I.OrderType>> {
-    return this._exchange('/order', 'DELETE', {params})
+  async cancel(params: I.CancelParam): Promise<I.Response<I.OrderType>> {
+    const res = await this._exchange('/order', 'DELETE', {params})
+    res.data = toNumbers(res.data)
+    return res
   }
 
   /**
@@ -220,8 +235,10 @@ export class UPbit {
    * 매수 주문의 경우 ord_type을 price로 설정하고 volume을 null 혹은 제외해야됩니다.
    * 매도 주문의 경우 ord_type을 market로 설정하고 price을 null 혹은 제외해야됩니다.
   **/
-  order(params: I.OrderLimitParam | I.OrderPriceParam | I.OrderMarketParam): Promise<I.Response<I.OrderExType>> {
-    return this._exchange('/orders', 'POST', {params})
+  async order(params: I.OrderLimitParam | I.OrderPriceParam | I.OrderMarketParam): Promise<I.Response<I.OrderExType>> {
+    const res = await this._exchange('/orders', 'POST', {params})
+    res.data = toNumbers(res.data)
+    return res
   }
 
   private async _quotation(endPoint: string, params?: any): Promise<I.Response<any>> {

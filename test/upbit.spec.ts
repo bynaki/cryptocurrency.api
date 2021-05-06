@@ -5,6 +5,7 @@ import {
 import {
   UPbit,
 } from '../src/upbit'
+import * as I from '../src/upbit.types'
 import { AxiosError } from 'axios';
 
 
@@ -58,7 +59,7 @@ test('upbit > getCandlesMinutes', async t => {
 // 분(Minute) 캔들
 test('upbit > getCandlesMinutes: error', async t => {
   const err: AxiosError = await t.throwsAsync(() => {
-    return upbit.getCandlesMinutes(2, {market: 'KRW-BTC'})
+    return upbit.getCandlesMinutes(2 as any, {market: 'KRW-BTC'})
   })
   t.is(err.message, 'Request failed with status code 400')
 })
@@ -327,7 +328,7 @@ test('upbit > getTradesTicks: params', async t => {
 
 // 현재가 정보
 test('upbit > getTicker', async t => {
-  const res = await upbit.getTicker({ markets: 'KRW-BTC' })
+  const res = await upbit.getTicker({ markets: ['KRW-BTC'] })
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -364,7 +365,7 @@ test('upbit > getTicker', async t => {
 
 // 현재가 정보
 test('upbit > getTicker: 2 length', async t => {
-  const res = await upbit.getTicker({ markets: 'KRW-BTC, KRW-ETH' })
+  const res = await upbit.getTicker({ markets: ['KRW-BTC', 'KRW-ETH'] })
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
@@ -375,7 +376,7 @@ test('upbit > getTicker: 2 length', async t => {
 
 // 호가 정보 조회
 test('upbit > getOrderbook', async t => {
-  const res = await upbit.getOrderbook({ markets: 'KRW-BTC' })
+  const res = await upbit.getOrderbook({ markets: ['KRW-BTC'] })
   console.log(res)
   console.log(res.data[0].orderbook_units)
   t.is(res.status, 200)
@@ -399,7 +400,7 @@ test('upbit > getOrderbook', async t => {
 
 // 호가 정보 조회
 test('upbit > getOrderbook: 2 length', async t => {
-  const res = await upbit.getOrderbook({ markets: 'KRW-BTC, KRW-ADA' })
+  const res = await upbit.getOrderbook({ markets: ['KRW-BTC', 'KRW-ADA'] })
   console.log(res)
   console.log(res.data[0].orderbook_units)
   console.log(res.data[1].orderbook_units)
@@ -414,14 +415,76 @@ test('upbit > getAccounts', async t => {
   console.log(res)
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+  if(res.data.length !== 0) {
+    t.deepEqual(Object.keys(res.data[0]), [
+      'currency',
+      'balance',
+      'locked',
+      'avg_buy_price',
+      'avg_buy_price_modified',
+      'unit_currency',
+    ])
+    t.true(Number.isFinite(res.data[0].balance))
+    t.true(Number.isFinite(res.data[0].locked))
+    t.true(Number.isFinite(res.data[0].avg_buy_price))
+  }
 })
 
 // 주문 가능 정보
 test('upbit > getOrdersChance', async t => {
   const res = await upbit.getOrdersChance({market: 'KRW-BTC'})
-  console.log(JSON.stringify(res, null ,2))
+  // console.log(JSON.stringify(res, null ,2))
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
+  const data = res.data
+  console.log(data)
+  t.deepEqual(Object.keys(data), [
+    "bid_fee",
+    "ask_fee",
+    "maker_bid_fee",
+    "maker_ask_fee",
+    'market',
+    'bid_account',
+    'ask_account',
+  ]) 
+  t.deepEqual(Object.keys(data.market), [
+    "id",
+    "name",
+    "order_types",
+    "order_sides",
+    "bid",
+    "ask",
+    "max_total",
+    "state",
+  ])
+  t.deepEqual(Object.keys(data.bid_account), [
+    "currency",
+    "balance",
+    "locked",
+    "avg_buy_price",
+    "avg_buy_price_modified",
+    "unit_currency",
+  ])
+  t.deepEqual(Object.keys(data.ask_account), [
+    "currency",
+    "balance",
+    "locked",
+    "avg_buy_price",
+    "avg_buy_price_modified",
+    "unit_currency",
+  ])
+  t.deepEqual(Object.keys(data.market.bid), [
+    "currency",
+    "price_unit",
+    "min_total",
+  ])
+  t.deepEqual(Object.keys(data.market.ask), [
+    "currency",
+    "price_unit",
+    "min_total",
+  ])
+  t.true(Number.isFinite(data.bid_fee))
+  t.true(Number.isFinite(data.ask_fee))
 })
 
 // 주문 리스트 조회
@@ -453,9 +516,20 @@ test('upbit > getOrderList: market & state: done', async t => {
   t.is(res.status, 200)
   t.deepEqual(Object.keys(res.remainingReq), ['group', 'min', 'sec'])
   t.true(res.data.length !== 0)
+  t.deepEqual(Object.keys(res.data[0]), [
+    'uuid',             'side',
+    'ord_type',         'price',
+    'state',            'market',
+    'created_at',       'volume',
+    'remaining_volume', 'reserved_fee',
+    'remaining_fee',    'paid_fee',
+    'locked',           'executed_volume',
+    'trades_count',
+  ])
   res.data.forEach(d => {
     t.is(d.market, 'KRW-DKA')
     t.is(d.state, 'done')
+    t.true(Number.isFinite(d.price))
   })
 })
 
@@ -466,38 +540,47 @@ test('upbit > getOrderDetail', async t => {
   const res2 = await upbit.getOrderDetail({uuid})
   t.is(res2.status, 200)
   t.deepEqual(Object.keys(res2.remainingReq), ['group', 'min', 'sec'])
-  console.log(JSON.stringify(res2, null, 2))
+  // console.log(JSON.stringify(res2, null, 2))
   const data = res2.data
+  console.log(data)
   t.is(data.uuid, uuid)
   t.is(data.market, 'KRW-BTC')
   t.is(data.state, 'done')
   t.is(data.trades_count, data.trades.length)
+  t.true(data.trades_count >= 1)
+  t.deepEqual(Object.keys(data.trades[0]), [
+    "market",
+    "uuid",
+    "price",
+    "volume",
+    "funds",
+    "created_at",
+    "side",
+  ])
+  t.true(Number.isFinite(data.trades[0].price))
 })
 
 // 주문하기 & 주문 취소 접수
 test('upbit > order & cancel', async t => {
   const trade = await upbit.getTradesTicks({market: 'KRW-BTC'})
   const price = (trade.data[0].trade_price * 0.9) - ((trade.data[0].trade_price * 0.9) % 1000)
-  const params = {
+  const params: I.OrderLimitParam = {
     market: 'KRW-BTC',
     side: 'bid',
-    volume: (10000 / price).toString(),
-    price: price.toString(),
+    volume: 10000 / price,
+    price: price,
     ord_type: 'limit',
   }
-  console.log(`params: ${JSON.stringify(params)}`)
-  const order = await upbit.order({
-    market: 'KRW-BTC',
-    side: 'bid',
-    volume: (10000 / price).toString(),
-    price: price.toString(),
-    ord_type: 'limit',
-  })
+  console.log('params:')
+  console.log(params)
+  const order = await upbit.order(params)
+  console.log('order:')
   console.log(order)
   t.is(order.status, 201)
   t.deepEqual(Object.keys(order.remainingReq), ['group', 'min', 'sec'])
   t.is(order.remainingReq.group, 'order')
   const cancel = await upbit.cancel({uuid: order.data.uuid})
+  console.log('cancel:')
   console.log(cancel)
   t.is(cancel.status, 200)
   t.deepEqual(Object.keys(cancel.remainingReq), ['group', 'min', 'sec'])

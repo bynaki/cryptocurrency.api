@@ -395,7 +395,7 @@ export interface OrderDetailType extends OrderType {
       // 체결 종류	String
       side: 'bid'|'ask'
       // 체결 시각	DateString
-      create_at: string
+      created_at: string
     }
   ]
 }

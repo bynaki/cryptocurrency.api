@@ -1,7 +1,5 @@
 export {AxiosError} from 'axios'
-export {
-  UPbit,
-} from './upbit'
+export * from './upbit'
 export * as upbit_types from './upbit.types'
 export {
   Binance,

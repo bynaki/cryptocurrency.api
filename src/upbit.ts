@@ -1,5 +1,6 @@
 import axios, {
   Method,
+  AxiosError,
 } from 'axios'
 import * as I from './upbit.types'
 import {
@@ -15,6 +16,45 @@ import {
 import {
   toNumbers,
 } from './utils'
+
+
+
+function reference<T>(obj: any, ...datums: string[]): T {
+  return datums.reduce((obj, d) => {
+    if(!obj) {
+      return obj
+    }
+    return obj[d]
+  }, obj)
+}
+
+
+export class RequestError extends Error {
+  readonly code: string|number
+  readonly url: string
+  readonly method: string
+  readonly params: unknown
+  readonly status: number
+  readonly statusText: string
+
+  constructor(axiosError: AxiosError) {
+    const message = reference<string>(axiosError, 'response', 'data', 'error', 'message')
+    if(message) {
+      super(message)
+    } else {
+      super(axiosError.message)
+    }
+    const code = reference<string>(axiosError, 'response', 'data', 'error', 'name')
+    if(code) {
+      this.code = code
+    }
+    this.url = reference<string>(axiosError, 'config', 'url')
+    this.method = reference<string>(axiosError, 'config', 'method')
+    this.params = reference<unknown>(axiosError, 'config', 'params')
+    this.status = reference<number>(axiosError, 'response', 'status')
+    this.statusText = reference<string>(axiosError, 'response', 'statusText')
+  }
+}
 
 
 /**
@@ -242,11 +282,19 @@ export class UPbit {
   }
 
   private async _quotation(endPoint: string, params?: any): Promise<I.Response<any>> {
-    const res = await axios({method: 'GET', url: `${this._url}${endPoint}`, params})
-    return {
-      status: res.status,
-      remainingReq: this._extractRemainingReq(res.headers),
-      data: res.data,
+    try {
+      const res = await axios({method: 'GET', url: `${this._url}${endPoint}`, params})
+      return {
+        status: res.status,
+        remainingReq: this._extractRemainingReq(res.headers),
+        data: res.data,
+      }
+    } catch(e) {
+      if(e.isAxiosError) {
+        throw new RequestError(e)
+      } else {
+        throw e
+      }
     }
   }
 
@@ -277,19 +325,27 @@ export class UPbit {
       })
     }
     const token = sign(payload, this._opts.secretKey)
-    const res = await axios({
-      method,
-      url: `${this._url}${endPoint}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: pp,
-      //data: params,
-    })
-    return {
-      status: res.status,
-      remainingReq: this._extractRemainingReq(res.headers),
-      data: res.data,
+    try {
+      const res = await axios({
+        method,
+        url: `${this._url}${endPoint}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: pp,
+        //data: params,
+      })
+      return {
+        status: res.status,
+        remainingReq: this._extractRemainingReq(res.headers),
+        data: res.data,
+      }
+    } catch(e) {
+      if(e.isAxiosError) {
+        throw new RequestError(e)
+      } else {
+        throw e
+      }
     }
   }
 

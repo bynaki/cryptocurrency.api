@@ -439,7 +439,7 @@ export interface TradeTickParam {
   // 체결 개수
   count?: number
   // 페이지네이션 커서 (sequentialId)
-  cursor?: string
+  cursor?: number
   // 최근 체결 날짜 기준 7일 이내의 이전 데이터 조회 가능. 비워서 요청 시 가장 최근 체결 날짜 반환. (범위: 1 ~ 7))
   daysAgo?: number
 }

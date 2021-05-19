@@ -16,7 +16,9 @@ import {
 import {
   toNumbers,
 } from './utils'
-
+import {
+  stop,
+} from 'fourdollar.stop'
 
 
 function reference<T>(obj: any, ...datums: string[]): T {
@@ -291,7 +293,13 @@ export class UPbit {
       }
     } catch(e) {
       if(e.isAxiosError) {
-        throw new RequestError(e)
+        const err = new RequestError(e)
+        if(err.status === 429) {
+          await stop(100)
+          return this._quotation(endPoint, params)
+        } else {
+          throw err
+        }
       } else {
         throw e
       }
@@ -342,7 +350,13 @@ export class UPbit {
       }
     } catch(e) {
       if(e.isAxiosError) {
-        throw new RequestError(e)
+        const err = new RequestError(e)
+        if(err.status === 429) {
+          await stop(100)
+          return this._exchange(endPoint, method, {params, data})
+        } else {
+          throw err
+        }
       } else {
         throw e
       }

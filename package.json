@@ -1,6 +1,6 @@
 {
   "name": "cryptocurrency.api",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Cryptocurrency API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -46,6 +46,7 @@
     "axios": "^0.21.1",
     "fourdollar.isfloat": "^1.0.1",
     "fourdollar.isinteger": "^1.0.4",
+    "fourdollar.stop": "^0.1.0",
     "fourdollar.tostringquery": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "node-binance-api": "^0.12.5",

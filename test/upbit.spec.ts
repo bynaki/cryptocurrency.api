@@ -144,21 +144,48 @@ test.serial('upbit > 잘못된 param', async t => {
   })
 }
 
-test.serial('upbit > error: Too Many Requests', async t => {
-  try {
-    while(true) {
-      const res = await upbit.getTradesTicks({
-        market: 'KRW-BTC',
-      })
+test.serial.skip('upbit > error: Too Many Requests - quotation', async t => {
+  t.timeout(70000)
+  let sec = -1
+  for(let i = 0 ; i < 600 ; i++) {
+    const res = await upbit.getTradesTicks({
+      market: 'KRW-BTC',
+    })
+    if(sec === -1) {
+      sec = res.remainingReq.sec
+      continue
     }
-  } catch(e) {
-    console.log(e)
-    if(e instanceof RequestError) {
-      t.is(e.status, 429)
-      t.is(e.statusText, 'Too Many Requests')
+    if(sec === 0 && res.remainingReq.sec === 9) {
+      t.is(sec, 0)
+      t.is(res.remainingReq.sec, 9)
+      return
     }
+    sec = res.remainingReq.sec
   }
+  t.pass()
 })
+
+test.serial.skip('upbit > error: Too Many Requests - exchange', async t => {
+  t.timeout(70000)
+  let sec = -1
+  for(let i = 0 ; i < 600 ; i++) {
+    const res = await upbit.getOrderList({
+      market: 'KRW-BTC',
+    })
+    if(sec === -1) {
+      sec = res.remainingReq.sec
+      continue
+    }
+    if(sec === 0 && res.remainingReq.sec === 9) {
+      t.is(sec, 0)
+      t.is(res.remainingReq.sec, 9)
+      return
+    }
+    sec = res.remainingReq.sec
+  }
+  t.pass()
+})
+
 
 // 마켓 코드 조회
 test.serial('upbit > getMarket', async t => {

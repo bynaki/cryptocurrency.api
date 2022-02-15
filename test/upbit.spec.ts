@@ -550,7 +550,7 @@ test.serial('upbit > getTicker: 2 length', async t => {
 })
 
 // 호가 정보 조회
-test.serial('upbit > getOrderbook', async t => {
+test.serial.only('upbit > getOrderbook', async t => {
   const res = await upbit.getOrderbook({ markets: ['KRW-BTC'] })
   console.log(res)
   console.log(res.data[0].orderbook_units)

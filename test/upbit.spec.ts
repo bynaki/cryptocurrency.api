@@ -132,7 +132,8 @@ test.serial('upbit > 잘못된 param', async t => {
     } catch(e) {
       console.log(e)
       if(e instanceof RequestError) {
-        t.true(e.message === 'Thie access key is incorrect.' || e.message === '잘못된 엑세스 키입니다.')
+        console.log(e.message)
+        t.true(e.message === 'This access key is incorrect.' || e.message === '잘못된 엑세스 키입니다.')
         // t.regex(e.message, /^잘못된 엑세스 키입니다./)
         // t.regex(e.message, /^This access key is incorrect./)
         t.is(e.code, 'invalid_access_key')
@@ -234,11 +235,11 @@ test.serial('upbit > getCandlesMinutes', async t => {
 
 // 분(Minute) 캔들
 test.serial('upbit > getCandlesMinutes: error', async t => {
-  const err: AxiosError = await t.throwsAsync(() => {
+  const err: AxiosError | undefined = await t.throwsAsync(() => {
     return upbit.getCandlesMinutes(2 as any, {market: 'KRW-BTC'})
   })
   console.log(err)
-  t.is(err.message, 'Request failed with status code 400')
+  t.is(err!.message, 'Request failed with status code 400')
 })
 
 test.serial('upbit > getCandlesMinutes: params', async t => {
@@ -709,7 +710,7 @@ test.serial('upbit > getOrderList: market & state: done', async t => {
     if(d.ord_type !== 'market') {
       t.true(Number.isFinite(d.price))
     } else {
-      t.is(d.price, undefined)
+      t.is(d.price, undefined!)
     }
   })
 })

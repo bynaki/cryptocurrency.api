@@ -1,4 +1,4 @@
-import * as binance from 'node-binance-api'
+import binance from 'node-binance-api'
 import * as I from './binance.types'
 import {
   clone,
@@ -19,7 +19,7 @@ export class Binance {
     useSeverTime?: boolean,
     reconnect?: boolean,
   }) {
-    this._b = binance().options(options)
+    this._b = new binance().options(options)
     this.websockets = new BinanceWebsocket(this._b.websockets)
   }
 

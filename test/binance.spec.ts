@@ -6,6 +6,9 @@ import {
 import {
   getConfig,
 } from '../src/utils'
+import {
+  Observable,
+} from 'fourdollar'
 
 
 
@@ -45,12 +48,12 @@ test('binance > prices(): single', async t => {
 test('binance > prices(): all', async t => {
   const res = await binance.prices()
   t.true(res.data.length > 1)
-  const i = res.data.find(r => r.symbol === 'BNBBTC')
+  const i = res.data.find(r => r.symbol === 'BNBBTC')!
   t.is(i.symbol, 'BNBBTC')
   t.is(typeof i.price, 'string')
   const trans = res.transType()
   t.true(trans.data.length > 1)
-  const ii = trans.data.find(r => r.symbol === 'BNBBTC')
+  const ii = trans.data.find(r => r.symbol === 'BNBBTC')!
   t.is(ii.symbol, 'BNBBTC')
   t.is(typeof ii.price, 'number')
 })
@@ -99,14 +102,16 @@ test('binance > candlesticks(): future', async t => {
   t.is(res.data.length, 0)
 })
 
-test.cb('binance > websockets#candlesticks()', t => {
-  binance.websockets.candlesticks(['BTCUSDT'], '1m', (candlesticks) => {
-    // binance.websockets.terminate('btcusdt@kline_1m')
-    t.is(candlesticks.symbol, 'BTCUSDT')
-    t.is(typeof candlesticks.data.close, 'string')
-    const trans = candlesticks.transType()
-    t.is(typeof trans.data.close, 'number')
-    t.end()
+test('binance > websockets#candlesticks()', t => {
+  return new Observable(sub => {
+    binance.websockets.candlesticks(['BTCUSDT'], '1m', (candlesticks) => {
+      // binance.websockets.terminate('btcusdt@kline_1m')
+      t.is(candlesticks.symbol, 'BTCUSDT')
+      t.is(typeof candlesticks.data.close, 'string')
+      const trans = candlesticks.transType()
+      t.is(typeof trans.data.close, 'number')
+      sub.complete()
+    })
   })
 })
 

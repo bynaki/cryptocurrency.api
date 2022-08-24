@@ -166,7 +166,7 @@ export interface OrderbookType {
   // 호가 매수 총 잔량	Double
   total_bid_size: number
   // 호가	List of Objects
-  orderbook_units: [{
+  orderbook_units: {
     // 매도호가	Double
     ask_price: number
     // 매수호가	Double
@@ -175,7 +175,7 @@ export interface OrderbookType {
     ask_size: number
     // 매수 잔량	Double
     bid_size: number
-  }]
+  }[]
 }
 
 export interface AccountType {

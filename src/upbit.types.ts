@@ -293,7 +293,7 @@ export interface OrderChanceType {
       // 화폐를 의미하는 영문 대문자 코드	String
       currency: string
       // 주문금액 단위	String
-      price_unit: string
+      // price_unit: string
       // 최소 매도/매수 금액	Number
       min_total: number
     },
@@ -392,6 +392,8 @@ export interface OrderDetailType extends OrderType {
       volume: number
       // 체결된 총 가격	NumberString
       funds: number
+      // Trend
+      trend: 'up'|'down'
       // 체결 종류	String
       side: 'bid'|'ask'
       // 체결 시각	DateString

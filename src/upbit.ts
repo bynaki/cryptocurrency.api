@@ -18,7 +18,7 @@ import {
 } from './utils'
 import {
   stop,
-} from 'fourdollar.stop'
+} from 'fourdollar'
 
 
 function reference<T>(obj: any, ...datums: string[]): T {

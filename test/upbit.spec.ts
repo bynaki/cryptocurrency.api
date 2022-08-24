@@ -132,7 +132,9 @@ test.serial('upbit > 잘못된 param', async t => {
     } catch(e) {
       console.log(e)
       if(e instanceof RequestError) {
-        t.regex(e.message, /^잘못된 엑세스 키입니다./)
+        t.true(e.message === 'Thie access key is incorrect.' || e.message === '잘못된 엑세스 키입니다.')
+        // t.regex(e.message, /^잘못된 엑세스 키입니다./)
+        // t.regex(e.message, /^This access key is incorrect./)
         t.is(e.code, 'invalid_access_key')
         t.is(e.status, 401)
         t.is(e.statusText, 'Unauthorized')
@@ -325,7 +327,7 @@ test.serial('upbit > getCandlesDays: params', async t => {
     prev_closing_price: 4259000,
     change_price: 56000,
     change_rate: 0.0131486264,
-    converted_trade_price: null,
+    converted_trade_price: null!,
   })
   t.deepEqual(res.data[res.data.length - 1], {
     market: 'KRW-BTC',
@@ -341,7 +343,7 @@ test.serial('upbit > getCandlesDays: params', async t => {
     prev_closing_price: 4023000,
     change_price: -37000,
     change_rate: -0.0091971166,
-    converted_trade_price: null,
+    converted_trade_price: null!,
   })
 })
 
@@ -550,7 +552,7 @@ test.serial('upbit > getTicker: 2 length', async t => {
 })
 
 // 호가 정보 조회
-test.serial.only('upbit > getOrderbook', async t => {
+test.serial('upbit > getOrderbook', async t => {
   const res = await upbit.getOrderbook({ markets: ['KRW-BTC'] })
   console.log(res)
   console.log(res.data[0].orderbook_units)
@@ -650,12 +652,12 @@ test.serial('upbit > getOrdersChance', async t => {
   ])
   t.deepEqual(Object.keys(data.market.bid), [
     "currency",
-    "price_unit",
+    // "price_unit",
     "min_total",
   ])
   t.deepEqual(Object.keys(data.market.ask), [
     "currency",
-    "price_unit",
+    // "price_unit",
     "min_total",
   ])
   t.true(Number.isFinite(data.bid_fee))
@@ -704,9 +706,22 @@ test.serial('upbit > getOrderList: market & state: done', async t => {
   res.data.forEach(d => {
     t.is(d.market, 'KRW-DKA')
     t.is(d.state, 'done')
-    t.true(Number.isFinite(d.price))
+    if(d.ord_type !== 'market') {
+      t.true(Number.isFinite(d.price))
+    } else {
+      t.is(d.price, undefined)
+    }
   })
 })
+
+// test.serial.only('ttt', async t => {
+//   const res = await upbit.getOrderList({market: 'KRW-BTC', state: 'done'})
+//   for(let i = 0; i < 20; i++) {
+//     const uuid = res.data[i].uuid
+//     const res2 = await upbit.getOrderDetail({uuid})
+//     console.log(JSON.stringify(res2, null, 2))
+//   }
+// })
 
 // 개별 주문 조회
 test.serial('upbit > getOrderDetail', async t => {
@@ -729,6 +744,7 @@ test.serial('upbit > getOrderDetail', async t => {
     "price",
     "volume",
     "funds",
+    "trend",
     "created_at",
     "side",
   ])

@@ -3,8 +3,10 @@ import * as I from './binance.types'
 import {
   clone,
 } from 'lodash'
-import isInteger from 'fourdollar.isinteger'
-import isFloat from 'fourdollar.isfloat'
+import {
+  isInteger,
+  isFloat,
+} from 'fourdollar'
 
 
 export class Binance {

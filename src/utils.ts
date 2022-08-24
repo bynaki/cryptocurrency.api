@@ -2,11 +2,9 @@ import {
   readFileSync,
 } from 'fs'
 import {
-  isFloat
-} from 'fourdollar.isfloat'
-import {
-  isInteger
-} from 'fourdollar.isinteger'
+  isFloat,
+  isInteger,
+} from 'fourdollar'
 
 
 
